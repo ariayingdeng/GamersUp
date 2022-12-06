@@ -15,10 +15,10 @@ function SignupForm() {
 
   const handleSignupSubmit = (e) => {
     e.preventDefault()
-    const userName = e.target.username.value
+    const name = e.target.username.value
     const email = e.target.emailaddress.value
     const password = e.target.password.value
-    if (userName === '') {
+    if (name === '') {
       setAlertWithTimeout('Please enter your name', 'information')
     } else if (email.value === '') {
       setAlertWithTimeout('Please enter your email address', 'information')
@@ -32,7 +32,7 @@ function SignupForm() {
     } else if (password !== e.target.rpassword.value) {
       setAlertWithTimeout('Your passwords must match', 'information')
     } else {
-      executeRegisterService(userName, email, password)
+      executeRegisterService(name, email, password)
       if (error) {
         setAlertWithTimeout('Your email has been taken.', 'error')
       } else {

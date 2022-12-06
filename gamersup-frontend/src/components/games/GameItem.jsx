@@ -18,6 +18,7 @@ function GameItem({
     checkWantToPlay,
     checkPlayed,
   } = useContext(UserContext)
+  
   const [validImage, setValidImage] = useState(true)
   const [wantToPlay, setWantToPlay] = useState(false)
   const [played, setPlayed] = useState(false)

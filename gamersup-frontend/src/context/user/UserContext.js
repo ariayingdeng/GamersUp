@@ -82,10 +82,10 @@ export const UserProvider = ({ children }) => {
   }
 
   // Execute back end registration service
-  const executeRegisterService = async (userName, email, password) => {
+  const executeRegisterService = async (name, email, password) => {
     await axios
       .post(`${API_URL}/account/registration`, {
-        userName,
+        name,
         email,
         password,
       })
