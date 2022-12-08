@@ -1,7 +1,7 @@
 package com.gamersup.gamersupbackend.service;
 
-import com.gamersup.gamersupbackend.model.ChangePasswordRequest;
-import com.gamersup.gamersupbackend.model.ResetPasswordRequest;
+import com.gamersup.gamersupbackend.model.account.ChangePasswordRequest;
+import com.gamersup.gamersupbackend.model.account.ResetPasswordRequest;
 import com.gamersup.gamersupbackend.model.account.User;
 import com.gamersup.gamersupbackend.service.account_service.UserService;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailSender;

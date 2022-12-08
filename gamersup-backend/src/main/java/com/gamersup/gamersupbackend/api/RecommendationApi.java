@@ -1,6 +1,7 @@
 package com.gamersup.gamersupbackend.api;
 
 import com.gamersup.gamersupbackend.model.*;
+import com.gamersup.gamersupbackend.model.profile.GamerInfo;
 import com.gamersup.gamersupbackend.service.GamerService;
 import com.gamersup.gamersupbackend.service.RecommendationService;
 import com.gamersup.gamersupbackend.service.ReviewService;

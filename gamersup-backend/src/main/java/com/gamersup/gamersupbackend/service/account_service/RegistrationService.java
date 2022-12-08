@@ -1,6 +1,8 @@
 package com.gamersup.gamersupbackend.service.account_service;
 
 import com.gamersup.gamersupbackend.model.account.User;
+import com.gamersup.gamersupbackend.model.profile.GamerInfo;
+import com.gamersup.gamersupbackend.service.GamerService;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailSender;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailValidatorService;
 import com.gamersup.gamersupbackend.service.email_service.token.ConfirmationToken;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RegistrationService {
     private UserService userService;
+    private GamerService gamerService;
     private final EmailValidatorService emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
@@ -29,7 +32,7 @@ public class RegistrationService {
         System.out.println(request.getName());
         String token = userService.signUpUser(new User(request.getName(), request.getEmail(), request.getPassword()));
 
-        String link = "http://localhost:8080/api/account/confirm?token=" + token;
+        String link = "http://localhost:8091/api/account/confirm?token=" + token;
 
         emailSender.send(request.getEmail(), buildEmail(request.getName(), link));
 
@@ -53,7 +56,10 @@ public class RegistrationService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        userService.enableUser(confirmationToken.getUser().getEmail());
+        User user = confirmationToken.getUser();
+        userService.enableUser(user.getEmail());
+        // create the GamerInfo entity for the successfully registered user
+        gamerService.saveGamer(new GamerInfo(user.getEmail(), user.getName()));
 
         return true;
     }

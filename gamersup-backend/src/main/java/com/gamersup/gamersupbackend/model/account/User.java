@@ -26,6 +26,9 @@ public class User {
     @Column(name="password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
     private boolean enable = false;
 
     public User(String name, String email, String password) {

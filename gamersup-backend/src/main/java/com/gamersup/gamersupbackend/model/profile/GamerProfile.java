@@ -1,4 +1,4 @@
-package com.gamersup.gamersupbackend.model;
+package com.gamersup.gamersupbackend.model.profile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,13 +16,12 @@ import java.util.Date;
 @Getter
 @Setter
 public class GamerProfile {
-    private long userID;
-    private String userName;
+    private long infoId;
+    private String name;
     private String email;
     private Date dob;
     private String avatarUrl;
     private String bio;
     private Integer level;;
     private Integer likes;
-
 }

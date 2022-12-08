@@ -1,11 +1,8 @@
 package com.gamersup.gamersupbackend.api;
 
-import com.gamersup.gamersupbackend.model.*;
-import com.gamersup.gamersupbackend.model.account.RegistrationRequest;
-import com.gamersup.gamersupbackend.model.account.User;
+import com.gamersup.gamersupbackend.model.account.*;
+import com.gamersup.gamersupbackend.model.profile.GamerInfo;
 import com.gamersup.gamersupbackend.security.jwt.model.AuthenticationResponse;
-
-
 import com.gamersup.gamersupbackend.service.*;
 import com.gamersup.gamersupbackend.service.account_service.CustomAuthenticationProvider;
 import com.gamersup.gamersupbackend.service.account_service.CustomUserDetailsService;
@@ -18,18 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("api/account")
 @AllArgsConstructor
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="http://localhost:5365")
 public class AccountApi {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
@@ -37,13 +29,13 @@ public class AccountApi {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    private final UserService service;
+    private final UserService userService;
     private final RegistrationService registrationService;
     private final ResetPasswordService resetPasswordService;
 
     @PostMapping("/create")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
-        return new ResponseEntity<User>(service.saveUser(user), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
     @PostMapping("/registration")
@@ -59,7 +51,7 @@ public class AccountApi {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody GamerLoginRequest request) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest request) throws Exception {
         try {
             customAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                     request.getPassword()));

@@ -1,6 +1,6 @@
 package com.gamersup.gamersupbackend.api;
 
-import com.gamersup.gamersupbackend.model.*;
+import com.gamersup.gamersupbackend.model.profile.*;
 import com.gamersup.gamersupbackend.service.GamerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/gamers")
+@RequestMapping("api/gamerinfo")
 @AllArgsConstructor
 @CrossOrigin
 public class GamersApi {

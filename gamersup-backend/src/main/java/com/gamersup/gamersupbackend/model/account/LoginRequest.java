@@ -1,14 +1,20 @@
-package com.gamersup.gamersupbackend.model;
+package com.gamersup.gamersupbackend.model.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+
+/**
+ * For login request body
+ */
+
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class ResetPasswordRequest {
+public class LoginRequest {
     private String email;
+    private String password;
 }

@@ -1,15 +1,14 @@
-package com.gamersup.gamersupbackend.model;
+package com.gamersup.gamersupbackend.model.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class AvatarChangeRequest {
-    long userId;
-    String url;
+public class ResetPasswordRequest {
+    private String email;
 }

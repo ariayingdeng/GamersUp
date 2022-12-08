@@ -1,20 +1,15 @@
-package com.gamersup.gamersupbackend.model;
+package com.gamersup.gamersupbackend.model.profile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
-/**
- * For login request body
- */
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class GamerLoginRequest {
-    private String email;
-    private String password;
+public class AvatarChangeRequest {
+    long userId;
+    String url;
 }

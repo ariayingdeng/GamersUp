@@ -1,17 +1,14 @@
-package com.gamersup.gamersupbackend.model;
+package com.gamersup.gamersupbackend.model.profile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class BirthdayRequest {
+public class LikesRequest {
     long userId;
-    Date dob;
 }

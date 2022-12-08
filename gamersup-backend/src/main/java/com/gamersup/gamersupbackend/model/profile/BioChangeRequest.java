@@ -1,4 +1,4 @@
-package com.gamersup.gamersupbackend.model;
+package com.gamersup.gamersupbackend.model.profile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class LikesRequest {
+public class BioChangeRequest {
     long userId;
+    String bio;
 }

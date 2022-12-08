@@ -1,4 +1,4 @@
-package com.gamersup.gamersupbackend.model;
+package com.gamersup.gamersupbackend.model.profile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

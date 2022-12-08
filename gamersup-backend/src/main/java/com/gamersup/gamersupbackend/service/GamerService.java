@@ -4,42 +4,34 @@ import com.gamersup.gamersupbackend.model.Friends;
 import com.gamersup.gamersupbackend.repo.FriendRepository;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailSender;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailValidatorService;
-import com.gamersup.gamersupbackend.service.email_service.token.ConfirmationToken;
 import com.gamersup.gamersupbackend.service.email_service.token.ConfirmationTokenService;
 import com.gamersup.gamersupbackend.model.exception.ResourceNotFoundException;
-import com.gamersup.gamersupbackend.model.GamerInfo;
-import com.gamersup.gamersupbackend.model.GamerProfile;
+import com.gamersup.gamersupbackend.model.profile.GamerInfo;
+import com.gamersup.gamersupbackend.model.profile.GamerProfile;
 import com.gamersup.gamersupbackend.repo.GamerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 
 @Service
 @AllArgsConstructor
-public class GamerService implements UserDetailsService {
+public class GamerService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     private final GamerRepository gamerRepository;
-//    private final PasswordConfiguration encoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final FriendRepository friendRepository;
     private final EmailValidatorService emailValidator;
     private final EmailSender emailSender;
-
 
     public GamerInfo saveGamer(GamerInfo gamer) {
         // Default likes and level
@@ -53,12 +45,10 @@ public class GamerService implements UserDetailsService {
     }
 
     public GamerInfo getGamerInfoById(long id) {
-
         // smarter method
         return gamerRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Gamer", "Id", id)
         );
-
     }
 
     public GamerProfile getGamerProfileById(long id) {
@@ -74,7 +64,7 @@ public class GamerService implements UserDetailsService {
     private GamerProfile getGamerProfile(Optional<GamerInfo> gamer) {
         if (gamer.isPresent()) {
             GamerInfo gamerInfo = gamer.get();
-            GamerProfile result = new GamerProfile(gamerInfo.getId(), gamerInfo.getUsername(), gamerInfo.getEmail(),
+            GamerProfile result = new GamerProfile(gamerInfo.getId(), gamerInfo.getName(), gamerInfo.getEmail(),
                     gamerInfo.getDob(), gamerInfo.getAvatarUrl(), gamerInfo.getBio(), gamerInfo.getLevel(), gamerInfo.getLikes());
             return result;
         } else {
@@ -82,14 +72,14 @@ public class GamerService implements UserDetailsService {
         }
     }
 
-    public GamerInfo updateGamer(long id, GamerInfo gamer) {
-        GamerInfo existingGamer = gamerRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Gamer", "Id", id));
-        existingGamer.setUserName(gamer.getUsername());
-        existingGamer.setEmail(gamer.getEmail());
-        existingGamer.setPassword(gamer.getPassword());
-        return gamerRepository.save(existingGamer);
-    }
+//    public GamerInfo updateGamer(long id, GamerInfo gamer) {
+//        GamerInfo existingGamer = gamerRepository.findById(id).orElseThrow(() ->
+//                new ResourceNotFoundException("Gamer", "Id", id));
+//        existingGamer.setUserName(gamer.getUsername());
+//        existingGamer.setEmail(gamer.getEmail());
+//        existingGamer.setPassword(gamer.getPassword());
+//        return gamerRepository.save(existingGamer);
+//    }
 
     public void deleteGamer(long id) {
         gamerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Gamer", "Id", id));
@@ -97,59 +87,29 @@ public class GamerService implements UserDetailsService {
         gamerRepository.deleteById(id);
     }
 
-    public boolean checkGamerExisting(String email, String password) {
-        GamerInfo gamer = gamerRepository.findByEmail(email).get();
-        if (gamer != null) {
-            if (gamer.getPassword().equals(password))
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return gamerRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Gamer", "email", email));
-    }
-
-
-//    public String signUpUser(GamerInfo gamer) {
-//        boolean gamerExists = gamerRepository.findByEmail(gamer.getEmail()).isPresent();
-//        if (gamerExists) {
-//            // TODO check of attributes are the same
-//            // TODO if email not confirmed send confirmation email
-//
-//
-//            throw new IllegalStateException("Email already taken");
+//    public boolean checkGamerExisting(String email, String password) {
+//        GamerInfo gamer = gamerRepository.findByEmail(email).get();
+//        if (gamer != null) {
+//            if (gamer.getPassword().equals(password))
+//                return true;
 //        }
-//        String encodedPassword = passwordEncoder.encode(gamer.getPassword());
-//        gamer.setPassword(encodedPassword);
-//        gamer.setLikes(0);
-//
-//        gamerRepository.save(gamer);
-//
-//        String token = UUID.randomUUID().toString();
-//        // TODO: Send confirmation token
-//        ConfirmationToken confirmationToken = new ConfirmationToken(
-//                token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), gamer
-//        );
-//
-//        confirmationTokenService.saveConfirmationToken(confirmationToken);
-//
-//
-//        // TODO: Send Email
-//
-//        return token;
+//        return false;
 //    }
 
-    public int enableGamer(String email) {
-        return gamerRepository.enableGamer(email);
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//        return gamerRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Gamer", "email", email));
+//    }
+
+//    public int enableGamer(String email) {
+//        return gamerRepository.enableGamer(email);
+//    }
 
 
 
     public void updatePassword(GamerInfo gamer, String newPassword) {
         String encodedPassword = passwordEncoder.encode(newPassword);
-        gamer.setPassword(encodedPassword);
+//        gamer.setPassword(encodedPassword);
 
         gamerRepository.save(gamer);
 
@@ -164,8 +124,8 @@ public class GamerService implements UserDetailsService {
             Friends friendsRecord = new Friends(idA, idB, 0);
             try {
                 friendRepository.save(friendsRecord);
-                sendAcceptFriendshipMail(gamerRepository.findById(idA).get().getUsername(),
-                        gamerRepository.findById(idB).orElseThrow(() -> new ResourceNotFoundException("Id", "gamer", idB)).getUsername(),
+                sendAcceptFriendshipMail(gamerRepository.findById(idA).get().getName(),
+                        gamerRepository.findById(idB).orElseThrow(() -> new ResourceNotFoundException("Id", "gamer", idB)).getName(),
                         gamerRepository.findById(idB).orElseThrow(() -> new ResourceNotFoundException("Id", "gamer", idB)).getEmail(),
                         idA, idB
                 );
@@ -174,8 +134,8 @@ public class GamerService implements UserDetailsService {
                 return false;
             }
         } else {
-            sendAcceptFriendshipMail(gamerRepository.findById(idA).get().getUsername(),
-                    gamerRepository.findById(idB).orElseThrow(() -> new ResourceNotFoundException("Id", "gamer", idB)).getUsername(),
+            sendAcceptFriendshipMail(gamerRepository.findById(idA).get().getName(),
+                    gamerRepository.findById(idB).orElseThrow(() -> new ResourceNotFoundException("Id", "gamer", idB)).getName(),
                     gamerRepository.findById(idB).orElseThrow(() -> new ResourceNotFoundException("Id", "gamer", idB)).getEmail(),
                     idA, idB
             );
@@ -195,8 +155,8 @@ public class GamerService implements UserDetailsService {
                 return false;
             }
         } else {
-            sendAcceptFriendshipMail(gamerRepository.findById(idA).get().getUsername(),
-                    gamerRepository.findById(idB).orElseThrow(() -> new ResourceNotFoundException("Id", "gamer", idB)).getUsername(),
+            sendAcceptFriendshipMail(gamerRepository.findById(idA).get().getName(),
+                    gamerRepository.findById(idB).orElseThrow(() -> new ResourceNotFoundException("Id", "gamer", idB)).getName(),
                     gamerRepository.findById(idB).orElseThrow(() -> new ResourceNotFoundException("Id", "gamer", idB)).getEmail(),
                     idA, idB
             );

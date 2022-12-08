@@ -1,8 +1,11 @@
 package com.gamersup.gamersupbackend.service.account_service;
 
+import com.gamersup.gamersupbackend.model.account.Provider;
 import com.gamersup.gamersupbackend.model.account.User;
 import com.gamersup.gamersupbackend.model.exception.ResourceNotFoundException;
+import com.gamersup.gamersupbackend.model.profile.GamerInfo;
 import com.gamersup.gamersupbackend.repo.UserRepository;
+import com.gamersup.gamersupbackend.service.GamerService;
 import com.gamersup.gamersupbackend.service.email_service.token.ConfirmationToken;
 import com.gamersup.gamersupbackend.service.email_service.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -21,10 +24,25 @@ public class UserService {
 
     private UserRepository userRepository;
 
+    private GamerService gamerService;
     private final ConfirmationTokenService confirmationTokenService;
 
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    public void registerOAuthUser(String name, String email) {
+        boolean userExist = userRepository.findByEmail(email).isPresent();
+        if (!userExist) {
+            User newUser = new User();
+            newUser.setName(name);
+            newUser.setEmail(email);
+            newUser.setProvider(Provider.GOOGLE);
+            newUser.setEnable(true);
+
+            userRepository.save(newUser);
+            gamerService.saveGamer(new GamerInfo(newUser.getEmail(), newUser.getName()));
+        }
     }
 
     public String signUpUser(User user) {
@@ -38,6 +56,7 @@ public class UserService {
         }
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        user.setProvider(Provider.LOCAL);
         userRepository.save(user);
 
         String token = UUID.randomUUID().toString();

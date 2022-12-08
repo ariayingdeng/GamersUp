@@ -39,7 +39,7 @@ export const UserProvider = ({ children }) => {
 
   const getUserByEmail = (email) => {
     axios
-      .get(`${API_URL}/gamers/email=${email}`)
+      .get(`${API_URL}/gamerinfo/email=${email}`)
       .then((response) => {
         const loggedUser = JSON.stringify(response.data)
         sessionStorage.setItem(LOGIN_SESSION, loggedUser)

@@ -1,4 +1,4 @@
-package com.gamersup.gamersupbackend.model;
+package com.gamersup.gamersupbackend.model.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
