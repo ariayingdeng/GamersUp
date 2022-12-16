@@ -47,7 +47,7 @@ function ReviewItem({ item }) {
           <div className='num-display'>{rating}</div>
           <div className='mr-2 mb-2 text-gray-400'>
             <FaUser className='inline mr-1 w-5' />
-            <Link to={`/profile/${userID}`}>{commenter?.userName}</Link>
+            <Link to={`/profile/${userID}`}>{commenter?.name}</Link>
           </div>
           {isLoggedIn() && user?.userID === commenter?.userID && (
             <>

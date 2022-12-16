@@ -34,7 +34,7 @@ function ReviewForm({ gameId }) {
   }
 
   const handleSubmit = (e) => {
-    addReview(user.userID, gameId, rating, text)
+    addReview(user.id, gameId, rating, text)
   }
 
   return (

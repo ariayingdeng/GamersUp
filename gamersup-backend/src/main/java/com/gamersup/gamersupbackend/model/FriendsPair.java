@@ -9,7 +9,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class FriendsId implements Serializable {
+public class FriendsPair implements Serializable {
     private long gamerAId;
     private long gamerBId;
 

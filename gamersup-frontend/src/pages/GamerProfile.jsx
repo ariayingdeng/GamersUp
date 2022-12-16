@@ -34,7 +34,7 @@ function GamerProfile() {
       return (   
      <>
       <div className="card bg-base-300 p-4 my-8">
-       <ProfileComponent theUser = {gamer} />      
+       <ProfileComponent gamer = {gamer} />      
      </div>
   
       <div>

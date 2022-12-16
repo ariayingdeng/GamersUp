@@ -18,7 +18,7 @@ function LoginForm() {
 
   const { setAlertWithTimeout } = useContext(AlertContext)
 
-  const { user, isLoggedIn, executeAuthenticationService, getUserByEmail } =
+  const { user, isLoggedIn, executeAuthenticationService, getUserInfoByEmail } =
     useContext(UserContext)
 
   // not working for now
@@ -36,7 +36,7 @@ function LoginForm() {
     const password = e.target.password.value
     executeAuthenticationService(email, password)
       .then(() => {
-        getUserByEmail(email)
+        getUserInfoByEmail(email)
       })
       .catch((err) => {
         if (err.response) {

@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
   const initialState = {
     error: false,
     reading: true,
-    user: { userID: 0 }, // logged user
+    user: { id: 0 }, // logged user's info
     wantToPlay: [],
     played: [],
   }
@@ -37,7 +37,7 @@ export const UserProvider = ({ children }) => {
     })
   }
 
-  const getUserByEmail = (email) => {
+  const getUserInfoByEmail = (email) => {
     axios
       .get(`${API_URL}/gamerinfo/email=${email}`)
       .then((response) => {
@@ -106,7 +106,7 @@ export const UserProvider = ({ children }) => {
   }
 
   const getGamerById = async (id) => {
-    return await axios.get(`${API_URL}/gamers/gamer=${id}`)
+    return await axios.get(`${API_URL}/gamerinfo/gamer=${id}`)
   }
 
   const getWantToPlayByGamerId = async (id) => {
@@ -190,15 +190,15 @@ export const UserProvider = ({ children }) => {
   }
 
   const changeBio = async (bio) => {
-    const userId = state.user.userID
+    const userId = state.user.id
     axios
-      .put(`${API_URL}/gamers/bio/changebio`, {
+      .put(`${API_URL}/gamerinfo/bio/changebio`, {
         userId,
         bio,
       })
       .then((response) => {
         console.log(response.data)
-        getUserByEmail(state.user.email)
+        getUserInfoByEmail(state.user.email)
       })
       .catch((err) => {
         console.log(err)
@@ -209,15 +209,15 @@ export const UserProvider = ({ children }) => {
   }
 
   const changeAvatar = async (url) => {
-    const userId = state.user.userID
+    const userId = state.user.id
     axios
-      .put(`${API_URL}/gamers/changeAvatar`, {
+      .put(`${API_URL}/gamerinfo/changeAvatar`, {
         userId,
         url,
       })
       .then((response) => {
         console.log(response)
-        getUserByEmail(state.user.email)
+        getUserInfoByEmail(state.user.email)
       })
       .catch((err) => {
         console.log(err)
@@ -228,34 +228,34 @@ export const UserProvider = ({ children }) => {
   }
 
   const changeBirthday = (dob) => {
-    const userId = state.user.userID
-    return axios.put(`${API_URL}/gamers/changeBirthday`, {
+    const userId = state.user.id
+    return axios.put(`${API_URL}/gamerinfo/changeBirthday`, {
       userId,
       dob,
     })
   }
 
   const changeLevel = (level) => {
-    const userId = state.user.userID
-    return axios.put(`${API_URL}/gamers/changeLevel`, {
+    const userId = state.user.id
+    return axios.put(`${API_URL}/gamerinfo/changeLevel`, {
       userId,
       level,
     })
   }
 
   const changeLikes = (gamerId) => {    
-    return axios.put(`${API_URL}/gamers/changeLikes/${gamerId}`);
+    return axios.put(`${API_URL}/gamerinfo/changeLikes/${gamerId}`);
   }
 
   const getFriends = () => {   
-    const userId = state.user.userID;    
-    return axios.get(`${API_URL}/gamers/friends/${userId}`);
+    const userId = state.user.id;    
+    return axios.get(`${API_URL}/gamerinfo/friends/${userId}`);
     
   }
 
   /* add a game review with rating 5 when the user clicks love for a game */
   const addLoveGameReview = async (gameID) => {
-    const userID = state.user.userID
+    const userID = state.user.id
     return axios.put(`${API_URL}/reviews/lovegame`, {
       userID,
       gameID,
@@ -264,7 +264,7 @@ export const UserProvider = ({ children }) => {
 
   /* add a game review with rating 0 when the user clicks hate for a game */
   const addHateGameReview = async (gameID) => {
-    const userID = state.user.userID
+    const userID = state.user.id
     return axios.put(`${API_URL}/reviews/hategame`, {
       userID,
       gameID,
@@ -273,7 +273,7 @@ export const UserProvider = ({ children }) => {
 
   /** delete a review when the user cancel love or hate a game */
   const cancelLoveHate = async (gameID) => {
-    const userID = state.user.userID
+    const userID = state.user.id
     return axios.delete(`${API_URL}/reviews/user=${userID}&game=${gameID}`, {
       userID,
       gameID,
@@ -282,7 +282,7 @@ export const UserProvider = ({ children }) => {
 
   /** check whether the user loves a game */
   const checkLoveGame = async (gameID) => {
-    const userID = state.user.userID
+    const userID = state.user.id
     return axios.post(`${API_URL}/reviews/check/love`, {
       userID,
       gameID,
@@ -291,7 +291,7 @@ export const UserProvider = ({ children }) => {
 
   /** check whether the user hates a game */
   const checkHateGame = async (gameID) => {
-    const userID = state.user.userID
+    const userID = state.user.id
     return axios.post(`${API_URL}/reviews/check/hate`, {
       userID,
       gameID,
@@ -300,22 +300,22 @@ export const UserProvider = ({ children }) => {
 
   /** get Likes number for profile page*/
   const getLikes = (id) => {
-    return axios.get(`${API_URL}/gamers/getLikes/${id}`);
+    return axios.get(`${API_URL}/gamerinfo/getLikes/${id}`);
   }
 
   /** check is friend or not for profile page */
   const isFriend = (userId, gamerId) => {
-    return axios.get(`${API_URL}/gamers/isFriend/ida=${userId}&idb=${gamerId}`);
+    return axios.get(`${API_URL}/gamerinfo/isFriend/ida=${userId}&idb=${gamerId}`);
   }
 
   /** create friend request for adding friend */
   const addFriend = (userId, gamerId) => {
-    return axios.post(`${API_URL}/gamers/addfriendrequest/${userId}&${gamerId}`);
+    return axios.post(`${API_URL}/gamerinfo/addfriendrequest/${userId}&${gamerId}`);
   }
 
   /** accept friend  */
   const acceptFriend = (userId, gamerId) => {
-    return axios.post(`${API_URL}/gamers/friendsAdd/${userId}&${gamerId}`);
+    return axios.post(`${API_URL}/gamerinfo/friendsAdd/${userId}&${gamerId}`);
   }
 
   /** get recommended friend list from back end */
@@ -352,7 +352,7 @@ export const UserProvider = ({ children }) => {
         wantToPlayObject: state.wantToPlayObject,
         playedObject: state.playedObject,
         executeAuthenticationService,
-        getUserByEmail,
+        getUserInfoByEmail,
         logout,
         executeRegisterService,
         clickWantToPlay,

@@ -9,7 +9,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("api/chatting")
 @AllArgsConstructor
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="http://localhost:5365")
 public class ChatApi {
     private HashMap<Long, Audio> audioList;
 

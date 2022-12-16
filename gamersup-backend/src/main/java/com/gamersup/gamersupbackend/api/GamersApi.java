@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/gamerinfo")
 @AllArgsConstructor
-@CrossOrigin
+@CrossOrigin(origins="http://localhost:5365")
 public class GamersApi {
 
     private GamerService service;
@@ -35,25 +35,25 @@ public class GamersApi {
 
     // build get gamer by id REST API
     @GetMapping("/gamer={gamerid}")
-    public GamerProfile getGamerProfileById(@PathVariable long gamerid) {
-        return service.getGamerProfileById(gamerid);
+    public GamerInfo getGamerInfoById(@PathVariable long gamerid) {
+        return service.getGamerInfoById(gamerid);
     }
 
     // Get gamer by email
     @GetMapping("/email={email}")
-    public GamerProfile getGamerProfileByEmail(@PathVariable String email) {
-        return service.getGamerProfileByEmail(email);
+    public GamerInfo getGamerInfoByEmail(@PathVariable String email) {
+        return service.getGamerInfoByEmail(email);
     }
 
     // TODO: Search Gamers by username (wild-card)
     @GetMapping("/search?{keyword}")
-    public ResponseEntity<List<GamerProfile>> searchGamersByKeyword(@PathVariable("keyword") String keyword) {return null;}
+    public ResponseEntity<List<GamerInfo>> searchGamersByKeyword(@PathVariable("keyword") String keyword) {return null;}
 
     // build delete gamer REST API
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteGamer(@PathVariable("id") long id) {
+    @DeleteMapping("/delete/{email}")
+    public ResponseEntity<String> deleteGamer(@PathVariable("email") String email) {
         // delete gamer from db
-        service.deleteGamer(id);
+        service.deleteGamer(email);
         return new ResponseEntity<>("Gamer deleted successfully!", HttpStatus.OK);
     }
 
@@ -73,11 +73,11 @@ public class GamersApi {
     }
 
     @GetMapping("/friends/{id}")
-    public ResponseEntity<List<GamerProfile>> getFriendsListById(@PathVariable("id") long id) {
+    public ResponseEntity<List<GamerInfo>> getFriendsListById(@PathVariable("id") long id) {
         List<Long> friendIdList = service.getFriendListById(id);
-        List<GamerProfile> friends = new ArrayList<>();
+        List<GamerInfo> friends = new ArrayList<>();
         for (long friendId : friendIdList) {
-            friends.add(service.getGamerProfileById(friendId));
+            friends.add(service.getGamerInfoById(friendId));
         }
         return new ResponseEntity<>(friends, HttpStatus.OK);
     }

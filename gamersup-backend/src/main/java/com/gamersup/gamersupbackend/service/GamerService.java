@@ -2,21 +2,19 @@ package com.gamersup.gamersupbackend.service;
 
 import com.gamersup.gamersupbackend.model.Friends;
 import com.gamersup.gamersupbackend.repo.FriendRepository;
+import com.gamersup.gamersupbackend.repo.UserRepository;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailSender;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailValidatorService;
 import com.gamersup.gamersupbackend.service.email_service.token.ConfirmationTokenService;
 import com.gamersup.gamersupbackend.model.exception.ResourceNotFoundException;
 import com.gamersup.gamersupbackend.model.profile.GamerInfo;
-import com.gamersup.gamersupbackend.model.profile.GamerProfile;
 import com.gamersup.gamersupbackend.repo.GamerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 
@@ -28,6 +26,7 @@ public class GamerService {
     private PasswordEncoder passwordEncoder;
 
     private final GamerRepository gamerRepository;
+    private final UserRepository userRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final FriendRepository friendRepository;
     private final EmailValidatorService emailValidator;
@@ -51,26 +50,32 @@ public class GamerService {
         );
     }
 
-    public GamerProfile getGamerProfileById(long id) {
-        Optional<GamerInfo> gamer = gamerRepository.findById(id);
-        return getGamerProfile(gamer);
+    public GamerInfo getGamerInfoByEmail(String email) {
+        return gamerRepository.findByEmail(email).orElseThrow(() ->
+                new ResourceNotFoundException("Gamer", "email", email)
+        );
     }
 
-    public GamerProfile getGamerProfileByEmail(String email) {
-        Optional<GamerInfo> gamer = gamerRepository.findByEmail(email);
-        return getGamerProfile(gamer);
-    }
-
-    private GamerProfile getGamerProfile(Optional<GamerInfo> gamer) {
-        if (gamer.isPresent()) {
-            GamerInfo gamerInfo = gamer.get();
-            GamerProfile result = new GamerProfile(gamerInfo.getId(), gamerInfo.getName(), gamerInfo.getEmail(),
-                    gamerInfo.getDob(), gamerInfo.getAvatarUrl(), gamerInfo.getBio(), gamerInfo.getLevel(), gamerInfo.getLikes());
-            return result;
-        } else {
-            throw new ResourceNotFoundException("Gamer", "gamer", gamer);
-        }
-    }
+//    public GamerProfile getGamerProfileById(long id) {
+//        Optional<GamerInfo> gamer = gamerRepository.findById(id);
+//        return getGamerProfile(gamer);
+//    }
+//
+//    public GamerProfile getGamerProfileByEmail(String email) {
+//        Optional<GamerInfo> gamer = gamerRepository.findByEmail(email);
+//        return getGamerProfile(gamer);
+//    }
+//
+//    private GamerProfile getGamerProfile(Optional<GamerInfo> gamer) {
+//        if (gamer.isPresent()) {
+//            GamerInfo gamerInfo = gamer.get();
+//            GamerProfile result = new GamerProfile(gamerInfo.getId(), gamerInfo.getName(), gamerInfo.getEmail(),
+//                    gamerInfo.getDob(), gamerInfo.getAvatarUrl(), gamerInfo.getBio(), gamerInfo.getLevel(), gamerInfo.getLikes());
+//            return result;
+//        } else {
+//            throw new ResourceNotFoundException("Gamer", "gamer", gamer);
+//        }
+//    }
 
 //    public GamerInfo updateGamer(long id, GamerInfo gamer) {
 //        GamerInfo existingGamer = gamerRepository.findById(id).orElseThrow(() ->
@@ -81,10 +86,10 @@ public class GamerService {
 //        return gamerRepository.save(existingGamer);
 //    }
 
-    public void deleteGamer(long id) {
-        gamerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Gamer", "Id", id));
-        confirmationTokenService.deleteTokenByUserId(id);
-        gamerRepository.deleteById(id);
+    public void deleteGamer(String email) {
+        gamerRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Gamer", "Email", email));
+//        confirmationTokenService.deleteTokenByUserId(id);
+        gamerRepository.deleteByEmail(email);
     }
 
 //    public boolean checkGamerExisting(String email, String password) {
@@ -115,9 +120,9 @@ public class GamerService {
 
     }
 
-    public GamerInfo getGamerByEmail(String email) {
-        return gamerRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("email", "gamer", email));
-    }
+//    public GamerInfo getGamerByEmail(String email) {
+//        return gamerRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("email", "gamer", email));
+//    }
 
     public Boolean createFriendRequest(long idA, long idB) {
         if (!friendRepository.checkFriendRecord(idA, idB).isPresent()) {

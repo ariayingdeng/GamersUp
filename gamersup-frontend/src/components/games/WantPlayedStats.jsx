@@ -1,14 +1,15 @@
-import { React, useEffect, useContext, useState } from 'react'
-import { PlusIcon, CheckIcon } from '@heroicons/react/solid'
-import GamesContext from '../../context/games/GamesContext'
-import UserContext from '../../context/user/UserContext'
-import AlertContext from '../../context/alert/AlertContext'
+import { React, useEffect, useContext, useState } from 'react';
+import { PlusIcon, CheckIcon } from '@heroicons/react/solid';
+import GamesContext from '../../context/games/GamesContext';
+import UserContext from '../../context/user/UserContext';
+import AlertContext from '../../context/alert/AlertContext';
 
-function WantPlayedStats({ gameID, user: { userID } }) {
-//   const API_URL = process.env.REACT_APP_BACKEND_API_URL
+function WantPlayedStats({ gameID, user }) {
+
+  const { id } = user;
 
   const { getWantToPlayGamersByGameId, getPlayedGamersByGameId } =
-    useContext(GamesContext)
+    useContext(GamesContext);
 
   const {
     isLoggedIn,
@@ -16,59 +17,58 @@ function WantPlayedStats({ gameID, user: { userID } }) {
     clickPlayed,
     checkWantToPlay,
     checkPlayed,
-  } = useContext(UserContext)
+  } = useContext(UserContext);
 
-  const { setAlertWithTimeout } = useContext(AlertContext)
+  const { setAlertWithTimeout } = useContext(AlertContext);
 
-  const [wantToPlayGamers, setWantToPlayGamers] = useState([])
-  const [playedGamers, setPlayedGamers] = useState([])
-  const [wantToPlay, setWantToPlay] = useState(false)
-  const [played, setPlayed] = useState(false)
-  const [click, setClick] = useState(0)
+  const [wantToPlayGamers, setWantToPlayGamers] = useState([]);
+  const [playedGamers, setPlayedGamers] = useState([]);
+  const [wantToPlay, setWantToPlay] = useState(false);
+  const [played, setPlayed] = useState(false);
+  const [click, setClick] = useState(0);
 
   useEffect(() => {
-    console.log(gameID)
     if (gameID !== null) {
       getWantToPlayGamersByGameId(gameID).then((response) => {
-        setWantToPlayGamers(response.data)
-      })
+        setWantToPlayGamers(response.data);
+      });
       getPlayedGamersByGameId(gameID).then((response) => {
-        setPlayedGamers(response.data)
-      })
+        setPlayedGamers(response.data);
+      });
     }
     if (isLoggedIn()) {
       checkWantToPlay(gameID).then((response) => {
-        setWantToPlay(response.data)
-      })
+        setWantToPlay(response.data);
+      });
       checkPlayed(gameID).then((response) => {
-        setPlayed(response.data)
-      })
+        setPlayed(response.data);
+      });
     } else {
-      setWantToPlay(false)
-      setPlayed(false)
+      setWantToPlay(false);
+      setPlayed(false);
     }
-    setClick(0)
-  }, [click, isLoggedIn()])
+    setClick(0);
+  }, [click, isLoggedIn()]);
 
   const handleClickWant = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (isLoggedIn()) {
-      await clickWantToPlay(gameID, userID)
-      setClick(1)
+      await clickWantToPlay(gameID, id);
+      setClick(1);
     } else {
-      setAlertWithTimeout('Please sign in.', 'information')
+      setAlertWithTimeout('Please sign in.', 'information');
     }
-  }
+  };
 
   const handleClickPlayed = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (isLoggedIn()) {
-      await clickPlayed(gameID, userID)
-      setClick(1)
+      await clickPlayed(gameID, id);
+      setClick(1);
     } else {
-      setAlertWithTimeout('Please sign in.', 'information')
+      setAlertWithTimeout('Please sign in.', 'information');
     }
-  }
+  };
 
   return (
     <div className='w-full rounded-lg shadow-md bg-base-100 stats'>
@@ -96,7 +96,7 @@ function WantPlayedStats({ gameID, user: { userID } }) {
         <div className='text-lg stat-value'>{playedGamers?.length}</div>
       </div>
     </div>
-  )
+  );
 }
 
-export default WantPlayedStats
+export default WantPlayedStats;

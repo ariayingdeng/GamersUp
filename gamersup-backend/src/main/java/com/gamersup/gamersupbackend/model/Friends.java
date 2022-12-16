@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@IdClass(FriendsId.class)
+@IdClass(FriendsPair.class)
 @Table(name = "friends")
 public class Friends {
     @Id

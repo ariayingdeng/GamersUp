@@ -14,7 +14,7 @@ const userReducer = (state, action) => {
     case 'LOGOUT':
       return {
         ...state,
-        user: { userID: 0 },
+        user: { id: 0 },
       }
     case 'REGISTER':
       return {
@@ -42,7 +42,7 @@ const userReducer = (state, action) => {
 
     case 'ERROR':
       return {
-        user: { userID: 0 },
+        user: { id: 0 },
         error: true,
       }   
     default:

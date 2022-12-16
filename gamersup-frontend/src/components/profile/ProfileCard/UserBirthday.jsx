@@ -30,7 +30,7 @@ function UserBirthday({ gamerId, dob }) {
     >
       <h2 className='inline-flex text-accent-focus py-1 text-xl'>
         BirthDay:{' '}
-        {user.userID == gamerId && (
+        {user.id == gamerId && (
           <button
             className='btn-ghost badge badge-outline text-xs mx-4 my-auto p-3 absolute right-12'
             onClick={birthdayChange}

@@ -13,12 +13,11 @@ function GamesList() {
 
   // const { alert, setAlert, removeAlert } = useContext(AlertContext)
 
-  const { user, isLoggedIn } = useContext(UserContext)
+  const { user } = useContext(UserContext)
 
   useEffect(() => {
     // get games with platformId
-    const msg = getGames(platformId, searchText)
-    console.log(msg)
+    getGames(platformId, searchText)
 
     // // set Alert with search results info
     // let msg = ''
@@ -38,7 +37,7 @@ function GamesList() {
     //     setAlert(msg, 'information')
     //   }
     // }
-  }, [isLoggedIn()])
+  }, [])
 
   if (loading) {
     return <Loading />

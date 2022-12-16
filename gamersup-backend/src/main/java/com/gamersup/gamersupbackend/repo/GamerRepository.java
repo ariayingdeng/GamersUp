@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface GamerRepository extends JpaRepository<GamerInfo, Long> {
     Optional<GamerInfo> findByEmail(String email);
 
+    void deleteByEmail(String email);
+
 //    @Transactional
 //    @Modifying
 //    @Query("UPDATE GamerInfo a " + "SET a.enable = TRUE WHERE a.email = ?1")
