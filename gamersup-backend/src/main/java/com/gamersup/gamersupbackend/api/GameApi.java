@@ -29,6 +29,12 @@ public class GameApi {
         return gameService.getWantToPlayGamersByGameID(gameid);
     }
 
+    // Get a game's want-to-play-gamer number with game id
+    @GetMapping("/game={gameid}/wanttoplay/total")
+    public int getWantToPlayNumber(@PathVariable long gameid) {
+        return gameService.getWantToPlayGamersByGameID(gameid).size();
+    }
+
     // Get a gamer's played list with user id
     @GetMapping("/user={userid}/playedlist")
     public List<Played> getPlayedList(@PathVariable long userid) {
@@ -39,6 +45,12 @@ public class GameApi {
     @GetMapping("/game={gameid}/playedgamerslist")
     public List<Played> getPlayedGamersList(@PathVariable long gameid) {
         return gameService.getPlayedListByGameID(gameid);
+    }
+
+    // Get a game's played-gamer number with game id
+    @GetMapping("/game={gameid}/played/total")
+    public int getPlayedNumber(@PathVariable long gameid) {
+        return gameService.getPlayedListByGameID(gameid).size();
     }
 
     // Create/Update a new want-to-play
@@ -61,13 +73,13 @@ public class GameApi {
 
     // Check whether gamer wants to play a game
     @PostMapping("/check/wanttoplay")
-    public boolean checkWantToPlay(@RequestBody WantToPlay wantToPlay) {
+    public int checkWantToPlay(@RequestBody WantToPlay wantToPlay) {
         return gameService.checkWantToPlay(wantToPlay.getGameID(), wantToPlay.getGamerID());
     }
 
     // Check whether gamer played a game
     @PostMapping("/check/played")
-    public boolean checkPlayed(@RequestBody Played played) {
+    public int checkPlayed(@RequestBody Played played) {
         return gameService.checkPlayed(played.getGameID(), played.getGamerID());
     }
 

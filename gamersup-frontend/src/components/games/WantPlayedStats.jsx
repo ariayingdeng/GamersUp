@@ -5,11 +5,9 @@ import UserContext from '../../context/user/UserContext';
 import AlertContext from '../../context/alert/AlertContext';
 
 function WantPlayedStats({ gameID, user }) {
-
   const { id } = user;
 
-  const { getWantToPlayGamersByGameId, getPlayedGamersByGameId } =
-    useContext(GamesContext);
+  const { getWantToPlayNumber, getPlayedNumber } = useContext(GamesContext);
 
   const {
     isLoggedIn,
@@ -21,21 +19,12 @@ function WantPlayedStats({ gameID, user }) {
 
   const { setAlertWithTimeout } = useContext(AlertContext);
 
-  const [wantToPlayGamers, setWantToPlayGamers] = useState([]);
-  const [playedGamers, setPlayedGamers] = useState([]);
-  const [wantToPlay, setWantToPlay] = useState(false);
-  const [played, setPlayed] = useState(false);
-  const [click, setClick] = useState(0);
+  const [wantToPlayNum, setWantToPlayNum] = useState(0);
+  const [playedNum, setPlayedNum] = useState(0);
+  const [wantToPlay, setWantToPlay] = useState(0); // 0: false, 1: true
+  const [played, setPlayed] = useState(0); // 0: false, 1: true
 
   useEffect(() => {
-    if (gameID !== null) {
-      getWantToPlayGamersByGameId(gameID).then((response) => {
-        setWantToPlayGamers(response.data);
-      });
-      getPlayedGamersByGameId(gameID).then((response) => {
-        setPlayedGamers(response.data);
-      });
-    }
     if (isLoggedIn()) {
       checkWantToPlay(gameID).then((response) => {
         setWantToPlay(response.data);
@@ -44,17 +33,28 @@ function WantPlayedStats({ gameID, user }) {
         setPlayed(response.data);
       });
     } else {
-      setWantToPlay(false);
-      setPlayed(false);
+      setWantToPlay(0);
+      setPlayed(0);
     }
-    setClick(0);
-  }, [click, isLoggedIn()]);
+  }, [gameID, isLoggedIn, checkWantToPlay, checkPlayed]);
+
+  useEffect(() => {
+    if (gameID !== null) {
+      getWantToPlayNumber(gameID).then((response) => {
+        setWantToPlayNum(response.data);
+      });
+      getPlayedNumber(gameID).then((response) => {
+        setPlayedNum(response.data);
+      });
+    }
+  }, [gameID, getWantToPlayNumber, getPlayedNumber, wantToPlay, played]);
 
   const handleClickWant = async (e) => {
     e.preventDefault();
     if (isLoggedIn()) {
-      await clickWantToPlay(gameID, id);
-      setClick(1);
+      await clickWantToPlay(gameID, id).then((response) => {
+        setWantToPlay(response.data.checked);
+      });
     } else {
       setAlertWithTimeout('Please sign in.', 'information');
     }
@@ -63,8 +63,9 @@ function WantPlayedStats({ gameID, user }) {
   const handleClickPlayed = async (e) => {
     e.preventDefault();
     if (isLoggedIn()) {
-      await clickPlayed(gameID, id);
-      setClick(1);
+      await clickPlayed(gameID, id).then((response) => {
+        setPlayed(response.data.checked);
+      });
     } else {
       setAlertWithTimeout('Please sign in.', 'information');
     }
@@ -78,10 +79,10 @@ function WantPlayedStats({ gameID, user }) {
           onClick={handleClickWant}
         >
           <PlusIcon className='inline mr-1 w-5' />
-          {wantToPlay && <strong>Cancel Want-to-Play</strong>}
-          {!wantToPlay && <strong>Want to Play</strong>}
+          {wantToPlay === 1 && <strong>Cancel Want-to-Play</strong>}
+          {wantToPlay === 0 && <strong>Want to Play</strong>}
         </div>
-        <div className='text-lg stat-value'>{wantToPlayGamers?.length}</div>
+        <div className='text-lg stat-value'>{wantToPlayNum}</div>
       </div>
 
       <div className='stat'>
@@ -90,10 +91,10 @@ function WantPlayedStats({ gameID, user }) {
           onClick={handleClickPlayed}
         >
           <CheckIcon className='inline mr-1 w-5' />
-          {played && <strong>Cancel Played</strong>}
-          {!played && <strong>Played</strong>}
+          {played === 1 && <strong>Cancel Played</strong>}
+          {played === 0 && <strong>Played</strong>}
         </div>
-        <div className='text-lg stat-value'>{playedGamers?.length}</div>
+        <div className='text-lg stat-value'>{playedNum}</div>
       </div>
     </div>
   );

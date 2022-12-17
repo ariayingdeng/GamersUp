@@ -19,9 +19,8 @@ function GameItem({ game, user }) {
   } = useContext(UserContext);
 
   const [validImage, setValidImage] = useState(true);
-  const [wantToPlay, setWantToPlay] = useState(false);
-  const [played, setPlayed] = useState(false);
-  const [click, setClick] = useState(0);
+  const [wantToPlay, setWantToPlay] = useState(0);
+  const [played, setPlayed] = useState(0);
 
   useEffect(() => {
     if (background_image == null) {
@@ -34,15 +33,18 @@ function GameItem({ game, user }) {
       checkPlayed(gameID).then((response) => {
         setPlayed(response.data);
       });
+    } else {
+      setWantToPlay(0);
+      setPlayed(0);
     }
-    setClick(0);
-  }, [click, isLoggedIn()]);
+  }, [background_image, gameID, isLoggedIn, checkWantToPlay, checkPlayed]);
 
   const handleClickWant = async (e) => {
     e.preventDefault();
     if (isLoggedIn()) {
-      await clickWantToPlay(gameID, userID);
-      setClick(1);
+      await clickWantToPlay(gameID, userID).then((response) => {
+        setWantToPlay(response.data.checked);
+      });
     } else {
       navigate('/login', { replace: true });
     }
@@ -51,8 +53,9 @@ function GameItem({ game, user }) {
   const handleClickPlayed = async (e) => {
     e.preventDefault();
     if (isLoggedIn()) {
-      await clickPlayed(gameID, userID);
-      setClick(1);
+      await clickPlayed(gameID, userID).then((response) => {
+        setPlayed(response.data.checked);
+      });
     } else {
       navigate('/login', { replace: true });
     }
@@ -88,7 +91,7 @@ function GameItem({ game, user }) {
           <Link to={`/game/${gameID}`}>{name}</Link>
         </div>
         <div className='card-actions justify-start'>
-          {wantToPlay && (
+          {wantToPlay === 1 && (
             <button
               className='btn-ghost bg-primary badge badge-outline text-xs hover:bg-primary-focus'
               onClick={handleClickWant}
@@ -97,7 +100,7 @@ function GameItem({ game, user }) {
               Added
             </button>
           )}
-          {!wantToPlay && (
+          {wantToPlay === 0 && (
             <button
               className='btn-ghost badge badge-outline text-xs hover:bg-primary-focus'
               onClick={handleClickWant}
@@ -106,7 +109,7 @@ function GameItem({ game, user }) {
               Want to Play
             </button>
           )}
-          {played && (
+          {played === 1 && (
             <button
               className='btn-ghost bg-primary badge badge-outline text-xs hover:bg-primary-focus'
               onClick={handleClickPlayed}
@@ -115,7 +118,7 @@ function GameItem({ game, user }) {
               Added
             </button>
           )}
-          {!played && (
+          {played === 0 && (
             <button
               className='btn-ghost badge badge-outline text-xs hover:bg-primary-focus'
               onClick={handleClickPlayed}
