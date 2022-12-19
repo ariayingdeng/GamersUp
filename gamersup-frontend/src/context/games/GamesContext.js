@@ -29,7 +29,7 @@ export const GamesProvider = ({ children }) => {
   const setLoading = () => dispatch({ type: 'LOADING' });
 
   //Get first page with platform id
-  const getGames = (id, text) => {
+  const getGames = async (id, text) => {
     setLoading();
 
     //for all platforms
@@ -41,7 +41,7 @@ export const GamesProvider = ({ children }) => {
       url += `&search=${text}`;
     }
 
-    axios
+    await axios
       .get(url)
       .then((response) => {
         dispatch({
@@ -97,27 +97,9 @@ export const GamesProvider = ({ children }) => {
     }
   };
 
-  const getGameByGameId = (id) => {
-    setLoading();
-    const url = `${RAWG_API_URL}/games/${id}?key=${RAWG_API_KEY}`;
-    axios
-      .get(url)
-      .then((response) => {
-        dispatch({
-          type: 'GET_GAME',
-          payload: response.data,
-        });
-      })
-      .catch(() => {
-        dispatch({
-          type: 'ERROR',
-        });
-      });
-  };
-
   // the last version of getGame
-  const getGameByID = (id) => {
-    return axios.get(`${RAWG_API_URL}/games/${id}?key=${RAWG_API_KEY}`);
+  const getGameByID = async (id) => {
+    return await axios.get(`${RAWG_API_URL}/games/${id}?key=${RAWG_API_KEY}`);
   };
 
   const getWantToPlayGamersByGameId = (id) => {
@@ -137,23 +119,23 @@ export const GamesProvider = ({ children }) => {
   };
 
   // unused
-  const getGamesByIdList = async (gamesWantToPlay, gamesPlayed) => {
-    setLoading();
-    const wannaGames = [];
-    for (var i = 0; i < gamesWantToPlay.length; i++) {
-      wannaGames.push(
-        await axios
-          .get(
-            `${RAWG_API_URL}/games/${gamesWantToPlay[i]}?key=${RAWG_API_KEY}`
-          )
-          .then((response) => response.data)
-      );
-    }
-    console.log(wannaGames);
-    while (wannaGames.length < gamesWantToPlay.length) {
-      setTimeout(10);
-    }
-  };
+  // const getGamesByIdList = async (gamesWantToPlay, gamesPlayed) => {
+  //   setLoading();
+  //   const wannaGames = [];
+  //   for (var i = 0; i < gamesWantToPlay.length; i++) {
+  //     wannaGames.push(
+  //       await axios
+  //         .get(
+  //           `${RAWG_API_URL}/games/${gamesWantToPlay[i]}?key=${RAWG_API_KEY}`
+  //         )
+  //         .then((response) => response.data)
+  //     );
+  //   }
+  //   console.log(wannaGames);
+  //   while (wannaGames.length < gamesWantToPlay.length) {
+  //     setTimeout(10);
+  //   }
+  // };
 
   return (
     <GamesContext.Provider
@@ -172,7 +154,6 @@ export const GamesProvider = ({ children }) => {
         setPrevPage,
         setPlatform,
         searchGames,
-        getGameByGameId,
         getWantToPlayGamersByGameId,
         getPlayedGamersByGameId,
         getGameByID,

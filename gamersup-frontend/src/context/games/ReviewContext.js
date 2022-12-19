@@ -30,7 +30,6 @@ export const ReviewProvider = ({ children }) => {
       })
       .then((response) => {
         //response.data
-        console.log(response)
         dispatch({
           type: 'ADD_REVIEW',
           payload: response,

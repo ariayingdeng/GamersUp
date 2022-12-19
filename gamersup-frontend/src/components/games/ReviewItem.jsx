@@ -20,7 +20,6 @@ function ReviewItem({ item }) {
   useEffect(() => {
     if (userID !== null) {
       getGamerById(userID).then((response) => {
-        // console.log(response)
         setCommenter(response.data)
       })
     }
@@ -49,7 +48,7 @@ function ReviewItem({ item }) {
             <FaUser className='inline mr-1 w-5' />
             <Link to={`/profile/${userID}`}>{commenter?.name}</Link>
           </div>
-          {isLoggedIn() && user?.userID === commenter?.userID && (
+          {isLoggedIn() && user?.id === commenter?.id && (
             <>
               <button onClick={() => deleteReview(id)} className='close'>
                 <FaTimes color='pink' />
