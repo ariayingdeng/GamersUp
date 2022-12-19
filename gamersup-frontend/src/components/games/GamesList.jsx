@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import GamesContext from '../../context/games/GamesContext'
-import UserContext from '../../context/user/UserContext'
 import GamePlatforms from './GamePlatforms'
 import Loading from '../layout/Loading'
 import PageBar from '../layout/PageBar'
@@ -12,8 +11,6 @@ function GamesList() {
     useContext(GamesContext)
 
   // const { alert, setAlert, removeAlert } = useContext(AlertContext)
-
-  const { user } = useContext(UserContext)
 
   useEffect(() => {
     // get games with platformId
@@ -37,7 +34,7 @@ function GamesList() {
     //     setAlert(msg, 'information')
     //   }
     // }
-  }, [])
+  }, [platformId, searchText])
 
   if (loading) {
     return <Loading />
@@ -49,7 +46,7 @@ function GamesList() {
         {/* <div className='flex flex-wrap justify-between mt-5'> */}
         <div className='grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 mt-5 gap-5'>
           {games.map((game) => (
-            <GameItem key={game.id} game={game} user={user} />
+            <GameItem key={game.id} game={game} />
           ))}
         </div>
         <PageBar />

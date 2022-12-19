@@ -1,8 +1,7 @@
-import { React, useEffect, useContext, useState } from 'react'
+import { React, useEffect, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import GamesContext from '../context/games/GamesContext'
 import ReviewContext from '../context/games/ReviewContext'
-import UserContext from '../context/user/UserContext'
 import Loading from '../components/layout/Loading'
 import gameimage from '../images/gameimage.jpg'
 import ReviewForm from '../components/games/ReviewForm'
@@ -14,14 +13,12 @@ function GameDetailsPage() {
 
   const { getReviewsByGameId, reviews } = useContext(ReviewContext)
 
-  const { user } = useContext(UserContext)
-
-  const params = useParams()
+  const { gameid } = useParams()
 
   useEffect(() => {
-    getGameByGameId(params.id)
-    getReviewsByGameId(params.id)
-  }, [])
+    getGameByGameId(gameid)
+    getReviewsByGameId(gameid)
+  }, [gameid])
 
   // destruct properties from game object
   const { id, name, genres, background_image, rating, rating_top, website } =
@@ -95,7 +92,7 @@ function GameDetailsPage() {
                   <div className='stat'>
                     <div className='stat-title text-md'>Website</div>
                     <div className='text-lg stat-value'>
-                      <a href={`${website}`} target='_blank'>
+                      <a href={`${website}`} target='_blank' rel='noreferrer'>
                         Visit Website
                       </a>
                     </div>
@@ -103,7 +100,7 @@ function GameDetailsPage() {
                 )}
               </div>
 
-              <WantPlayedStats gameID={id} user={user} />
+              <WantPlayedStats gameID={id} />
             </div>
           </div>
           <ReviewForm gameId={id} />

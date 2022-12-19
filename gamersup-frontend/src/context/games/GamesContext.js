@@ -44,7 +44,6 @@ export const GamesProvider = ({ children }) => {
     axios
       .get(url)
       .then((response) => {
-        // console.log(response.data)
         dispatch({
           type: 'GET_GAMES',
           payload: response.data,

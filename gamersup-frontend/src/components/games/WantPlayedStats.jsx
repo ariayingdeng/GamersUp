@@ -4,8 +4,8 @@ import GamesContext from '../../context/games/GamesContext';
 import UserContext from '../../context/user/UserContext';
 import AlertContext from '../../context/alert/AlertContext';
 
-function WantPlayedStats({ gameID, user }) {
-  const { id } = user;
+function WantPlayedStats({ gameID }) {
+  // const { id } = user;
 
   const { getWantToPlayNumber, getPlayedNumber } = useContext(GamesContext);
 
@@ -52,7 +52,7 @@ function WantPlayedStats({ gameID, user }) {
   const handleClickWant = async (e) => {
     e.preventDefault();
     if (isLoggedIn()) {
-      await clickWantToPlay(gameID, id).then((response) => {
+      await clickWantToPlay(gameID).then((response) => {
         setWantToPlay(response.data.checked);
       });
     } else {
@@ -63,7 +63,7 @@ function WantPlayedStats({ gameID, user }) {
   const handleClickPlayed = async (e) => {
     e.preventDefault();
     if (isLoggedIn()) {
-      await clickPlayed(gameID, id).then((response) => {
+      await clickPlayed(gameID).then((response) => {
         setPlayed(response.data.checked);
       });
     } else {

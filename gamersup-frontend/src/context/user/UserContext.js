@@ -145,57 +145,31 @@ export const UserProvider = ({ children }) => {
       });
   };
 
-  // const clickWantToPlay = async (gameID, gamerID) => {
-  //   // const gamerID = gamer.userID
-  //   await axios
-  //     .put(`${API_URL}/games/wanttoplay`, { gameID, gamerID })
-  //     .then((response) => {
-  //       console.log(response.data)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //       dispatch({
-  //         type: 'ERROR',
-  //       })
-  //     })
-  // }
-
-  const clickWantToPlay = async (gameID, gamerID) => {
-    // const gamerID = gamer.id
-    return await axios.put(`${API_URL}/games/wanttoplay`, { gameID, gamerID });
+  const clickWantToPlay = async (gameID) => {
+    return await axios.put(`${API_URL}/games/wanttoplay`, {
+      gameID,
+      gamerID: state.user.id,
+    });
   };
 
-  // const clickPlayed = async (gameID, gamerID) => {
-  //   // const gamerID = gamer.userID
-  //   await axios
-  //     .put(`${API_URL}/games/played`, { gameID, gamerID })
-  //     .then((response) => {
-  //       console.log(response.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       dispatch({
-  //         type: 'ERROR',
-  //       });
-  //     });
-  // };
-
-  const clickPlayed = async (gameID, gamerID) => {
-    // const gamerID = gamer.id
-    return await axios.put(`${API_URL}/games/played`, { gameID, gamerID });
+  const clickPlayed = async (gameID) => {
+    return await axios.put(`${API_URL}/games/played`, {
+      gameID,
+      gamerID: state.user.id,
+    });
   };
 
   const checkWantToPlay = async (id) => {
     return await axios.post(`${API_URL}/games/check/wanttoplay`, {
       gameID: id,
-      gamerID: state.user.userID,
+      gamerID: state.user.id,
     });
   };
 
   const checkPlayed = async (id) => {
     return await axios.post(`${API_URL}/games/check/played`, {
       gameID: id,
-      gamerID: state.user.userID,
+      gamerID: state.user.id,
     });
   };
 

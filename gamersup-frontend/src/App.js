@@ -35,7 +35,7 @@ function App() {
                   <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path='/platform/:id' element={<GamesList />} />
-                    <Route path='/game/:id' element={<GameDetailsPage />} />
+                    <Route path='/game/:gameid' element={<GameDetailsPage />} />
                     <Route path='/login' element={<LoginForm />} />
                     <Route path='/signup' element={<SignupForm />} />
                     <Route

@@ -5,10 +5,9 @@ import { PlusIcon, CheckIcon } from '@heroicons/react/solid';
 import PropTypes from 'prop-types';
 import UserContext from '../../context/user/UserContext';
 
-function GameItem({ game, user }) {
+function GameItem({ game }) {
   const navigate = useNavigate();
   const { id: gameID, name, background_image, rating } = game;
-  const { id: userID } = user;
 
   const {
     isLoggedIn,
@@ -42,7 +41,7 @@ function GameItem({ game, user }) {
   const handleClickWant = async (e) => {
     e.preventDefault();
     if (isLoggedIn()) {
-      await clickWantToPlay(gameID, userID).then((response) => {
+      await clickWantToPlay(gameID).then((response) => {
         setWantToPlay(response.data.checked);
       });
     } else {
@@ -53,7 +52,7 @@ function GameItem({ game, user }) {
   const handleClickPlayed = async (e) => {
     e.preventDefault();
     if (isLoggedIn()) {
-      await clickPlayed(gameID, userID).then((response) => {
+      await clickPlayed(gameID).then((response) => {
         setPlayed(response.data.checked);
       });
     } else {
