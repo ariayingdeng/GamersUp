@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,9 +32,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void registerOAuthUser(String name, String email) {
-        boolean userExist = userRepository.findByEmail(email).isPresent();
-        if (!userExist) {
+    public void loginGoogleUser(String name, String email, String avatarUrl) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (!user.isPresent()) {
             User newUser = new User();
             newUser.setName(name);
             newUser.setEmail(email);
@@ -41,7 +42,14 @@ public class UserService {
             newUser.setEnable(true);
 
             userRepository.save(newUser);
-            gamerService.saveGamer(new GamerInfo(newUser.getEmail(), newUser.getName()));
+            gamerService.saveGamer(new GamerInfo(email, name, avatarUrl));
+        } else {
+            // update name and avatarUrl
+            User theUser = user.get();
+            theUser.setName(name);
+            userRepository.save(theUser);
+
+            gamerService.changeAvatarByEmail(email, avatarUrl);
         }
     }
 

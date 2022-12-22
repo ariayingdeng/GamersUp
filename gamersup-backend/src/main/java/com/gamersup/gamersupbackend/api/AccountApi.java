@@ -65,6 +65,16 @@ public class AccountApi {
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
+    @PostMapping("/login/google")
+    public ResponseEntity<Boolean> loginGoogleUser(@RequestBody GoogleLoginRequest request) throws Exception {
+        try {
+            userService.loginGoogleUser(request.getName(), request.getEmail(), request.getAvatarUrl());
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     // build update gamer REST API
     @PutMapping("/edit/{id}")
     public ResponseEntity<GamerInfo> updateGamerPassword(@PathVariable("id") long id, @RequestBody User user) {

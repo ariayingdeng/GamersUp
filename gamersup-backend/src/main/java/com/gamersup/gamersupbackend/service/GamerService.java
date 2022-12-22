@@ -318,4 +318,15 @@ public class GamerService {
             return false;
     }
 
+    public boolean changeAvatarByEmail(String email, String url) {
+        try {
+            GamerInfo gamer = gamerRepository.findByEmail(email).get();
+            gamer.setAvatarUrl(url);
+            gamerRepository.save(gamer);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
 }

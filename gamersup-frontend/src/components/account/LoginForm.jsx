@@ -1,57 +1,94 @@
-import { useContext, useState, useEffect } from 'react'
-import UserContext from '../../context/user/UserContext'
-import AlertContext from '../../context/alert/AlertContext'
+import { useContext, useState, useEffect } from 'react';
+import UserContext from '../../context/user/UserContext';
+import AlertContext from '../../context/alert/AlertContext';
 import {
   LockClosedIcon,
   EyeIcon,
   EyeOffIcon,
   MailIcon,
-} from '@heroicons/react/solid'
-import { Link, useNavigate } from 'react-router-dom'
-import Home from '../../pages/Home'
+} from '@heroicons/react/solid';
+import { Link, useNavigate } from 'react-router-dom';
+import Home from '../../pages/Home';
+import jwtDecode from 'jwt-decode';
 
 function LoginForm() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // Set show password icon and function
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { setAlertWithTimeout } = useContext(AlertContext)
+  const { setAlertWithTimeout } = useContext(AlertContext);
 
-  const { user, isLoggedIn, executeAuthenticationService, getUserInfoByEmail } =
-    useContext(UserContext)
+  const {
+    user,
+    isLoggedIn,
+    executeAuthenticationService,
+    getUserInfoByEmail,
+    executeGoogleAuthService,
+  } = useContext(UserContext);
 
   // not working for now
   // const REGISTER_SESSION = process.env.REACT_APP_REGISTER_SESSION
 
   useEffect(() => {
     if (isLoggedIn && user.level === null) {
-      navigate('/settings', { replace: true })
+      navigate('/settings', { replace: true });
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const email = e.target.email.value
-    const password = e.target.password.value
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
     executeAuthenticationService(email, password)
       .then(() => {
-        getUserInfoByEmail(email)
+        getUserInfoByEmail(email);
       })
       .catch((err) => {
         if (err.response) {
-          setAlertWithTimeout(err.response.data.error, 'error')
+          setAlertWithTimeout(err.response.data.error, 'error');
         } else if (err.request) {
-          setAlertWithTimeout(err.request, 'error')
+          setAlertWithTimeout(err.request, 'error');
         } else {
-          setAlertWithTimeout(err.message, 'error')
+          setAlertWithTimeout(err.message, 'error');
         }
-      })
+      });
+  };
 
-  }
+  /** For Google Login */
+  const handleCallbackResponse = (response) => {
+    const user = jwtDecode(response.credential);
+    executeGoogleAuthService(user.name, user.email, user.picture)
+      .then(() => {
+        getUserInfoByEmail(user.email);
+      })
+      .catch((err) => {
+        if (err.response) {
+          setAlertWithTimeout(err.response.data.error, 'error');
+        } else if (err.request) {
+          setAlertWithTimeout(err.request, 'error');
+        } else {
+          setAlertWithTimeout(err.message, 'error');
+        }
+      });
+  };
+
+  useEffect(() => {
+    /* global google: from the google script in index.html */
+    google.accounts.id.initialize({
+      client_id:
+        '319829939398-2m69isi5ul5mbq7o5mub2u0kvn9suvge.apps.googleusercontent.com',
+      callback: handleCallbackResponse,
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById('google-signin-button'),
+      { theme: 'outline', size: 'large' }
+    );
+  }, []);
 
   if (isLoggedIn()) {
-    return <Home />
+    return <Home />;
   } else {
     return (
       <>
@@ -172,13 +209,17 @@ function LoginForm() {
                     Sign in
                   </button>
                 </div>
+                <div className='flex items-center justify-between'>
+                  <p className='text-xl text-neutral-content'>OR</p>
+                  <div id='google-signin-button'></div>
+                </div>
               </form>
             </div>
           </div>
         </div>
       </>
-    )
+    );
   }
 }
 
-export default LoginForm
+export default LoginForm;

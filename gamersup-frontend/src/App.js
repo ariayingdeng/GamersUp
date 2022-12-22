@@ -1,25 +1,25 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import ForgotPassword from './components/account/ForgotPassword'
-import LoginForm from './components/account/LoginForm'
-import ResetPassword from './components/account/ResetPassword'
-import SignupForm from './components/account/SignupForm'
-import GamesList from './components/games/GamesList'
-import Alert from './components/layout/Alert'
-import Footer from './components/layout/Footer'
-import Navbar from './components/layout/Navbar'
-import { AlertProvider } from './context/alert/AlertContext'
-import { GamesProvider } from './context/games/GamesContext'
-import { UserProvider } from './context/user/UserContext'
-import { ReviewProvider } from './context/games/ReviewContext'
-import Home from './pages/Home'
-import NotFound from './pages/NotFound'
-import GameDetailsPage from './pages/GameDetailsPage'
-import GamerProfile from './pages/GamerProfile'
-import Settings from './pages/Settings'
-import AcceptFriendPage from './pages/AcceptFriendPage'
-import ChatRoom from './pages/ChatRoom'
-import RecommendationPage from './pages/RecommendationPage'
-import AuthenticatedRoute from './components/AuthenticatedRoute'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ForgotPassword from './components/account/ForgotPassword';
+import LoginForm from './components/account/LoginForm';
+import ResetPassword from './components/account/ResetPassword';
+import SignupForm from './components/account/SignupForm';
+import GamesList from './components/games/GamesList';
+import Alert from './components/layout/Alert';
+import Footer from './components/layout/Footer';
+import Navbar from './components/layout/Navbar';
+import { AlertProvider } from './context/alert/AlertContext';
+import { GamesProvider } from './context/games/GamesContext';
+import { UserProvider } from './context/user/UserContext';
+import { ReviewProvider } from './context/games/ReviewContext';
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+import GameDetailsPage from './pages/GameDetailsPage';
+import GamerProfile from './pages/GamerProfile';
+import Settings from './pages/Settings';
+import AcceptFriendPage from './pages/AcceptFriendPage';
+import ChatRoom from './pages/ChatRoom';
+import RecommendationPage from './pages/RecommendationPage';
+import AuthenticatedRoute from './components/AuthenticatedRoute';
 
 function App() {
   return (
@@ -82,7 +82,7 @@ function App() {
         </ReviewProvider>
       </UserProvider>
     </GamesProvider>
-  )
+  );
 }
 
-export default App
+export default App;

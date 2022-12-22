@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2LoginConfigurer;
@@ -22,11 +23,15 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -44,20 +49,34 @@ public class SecurityConfig {
     private UserService userService;
 
     @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5365"));
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors()
+                .and()
                 .authorizeRequests(auth -> {
                     auth.antMatchers("/**").permitAll();
-                    auth.anyRequest().authenticated();
+//                    auth.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults())
-                .oauth2Login(oauth2 -> {
+                .oauth2Login(oauth2 -> { // Unused
 //                    oauth2.defaultSuccessUrl("/loginSuccess");
 //                    oauth2.failureUrl("/loginFailure");
                     oauth2.authorizationEndpoint()
-                            .baseUri("/oauth2/authorize-client")
-                            .authorizationRequestRepository(authorizationRequestRepository()); //modified the baseUri to /oauth2/authorize-google instead of the default /oauth2/authorization
+                            .baseUri("/api/oauth2/client") //modified the baseUri to /oauth2/client instead of the default /oauth2/authorization
+                            .authorizationRequestRepository(authorizationRequestRepository());
 //                    oauth2.redirectionEndpoint().baseUri("/login/oauth2/success/*");
 //                    oauth2.failureHandler((request, response, exception) -> {
 //                        request.getSession().setAttribute("error.message", exception.getMessage());
@@ -67,7 +86,7 @@ public class SecurityConfig {
                         @Override
                         public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-                            userService.registerOAuthUser(oAuth2User.getName(), oAuth2User.getEmail());
+//                            userService.registerOAuthUser(oAuth2User.getName(), oAuth2User.getEmail());
                         }
                     });
                 });

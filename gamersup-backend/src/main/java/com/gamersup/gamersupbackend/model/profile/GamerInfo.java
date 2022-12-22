@@ -48,4 +48,10 @@ public class GamerInfo {
         this.name = name;
     }
 
+    public GamerInfo(String email, String name, String avatarUrl) {
+        this.email = email;
+        this.name = name;
+       this.avatarUrl = avatarUrl;
+    }
+
 }

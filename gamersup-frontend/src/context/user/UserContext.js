@@ -37,6 +37,18 @@ export const UserProvider = ({ children }) => {
     });
   };
 
+  // Execute Google login authentication
+  const executeGoogleAuthService = (name, email, avatarUrl) => {
+    // return axios.get(`${API_URL}/oauth2/client/google`, {
+    //   withCredentials: true,
+    // });
+    return axios.post(`${API_URL}/account/login/google`, {
+      name,
+      email,
+      avatarUrl,
+    });
+  };
+
   const getUserInfoByEmail = (email) => {
     axios
       .get(`${API_URL}/gamerinfo/email=${email}`)
@@ -369,6 +381,7 @@ export const UserProvider = ({ children }) => {
         getRecommendGames,
         hasRatings,
         changePassword,
+        executeGoogleAuthService,
       }}
     >
       {children}
