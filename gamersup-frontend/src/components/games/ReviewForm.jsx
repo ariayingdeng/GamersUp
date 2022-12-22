@@ -29,17 +29,17 @@ function ReviewForm({ gameId }) {
   }
 
   const handleSelectChange = (selected) => {
-    console.log(selected)
     setRating(selected)
   }
 
   const handleSubmit = (e) => {
-    addReview(user.userID, gameId, rating, text)
+    e.preventDefault()
+    addReview(user.id, gameId, rating, text)
   }
 
   return (
     <div className='w-full rounded-lg shadow-lg review-card bg-base-300'>
-      <form onSubmit={handleSubmit}>
+      <form className='form-control' onSubmit={handleSubmit}>
         <h2>How would you rate this game?</h2>
         <RatingSelect handleSelect={handleSelectChange} />
         <div className='input-group text-neutral-content'>

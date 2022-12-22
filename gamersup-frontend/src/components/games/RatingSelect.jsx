@@ -8,7 +8,6 @@ function RatingSelect({ handleSelect }) {
     //+:make the value a number
     setSelected(+e.currentTarget.value)
     handleSelect(+e.currentTarget.value)
-    console.log('add')
   }
 
   return (

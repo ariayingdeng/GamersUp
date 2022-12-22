@@ -38,13 +38,13 @@ function EditReviewForm({ gameId, itemEdit }) {
   }
 
   const handleSelectEdit = (selected) => {
-    console.log(selected)
     setRating(selected)
   }
 
   const handleSubmit = (e) => {
+    e.preventDefault()
     const reviewID = itemEdit.item.id
-    const userID = user.userID
+    const userID = user.id
     const newItem = {
       id: reviewID,
       userID: userID,

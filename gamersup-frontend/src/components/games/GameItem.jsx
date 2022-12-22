@@ -1,15 +1,13 @@
-import { React, useContext, useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import gameimage from '../../images/gameimage.jpg'
-import { PlusIcon, CheckIcon } from '@heroicons/react/solid'
-import PropTypes from 'prop-types'
-import UserContext from '../../context/user/UserContext'
+import { React, useContext, useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import gameimage from '../../images/gameimage.jpg';
+import { PlusIcon, CheckIcon } from '@heroicons/react/solid';
+import PropTypes from 'prop-types';
+import UserContext from '../../context/user/UserContext';
 
-function GameItem({
-  game: { id, name, background_image, rating },
-  user: { userID },
-}) {
-  const navigate = useNavigate()
+function GameItem({ game }) {
+  const navigate = useNavigate();
+  const { id: gameID, name, background_image, rating } = game;
 
   const {
     isLoggedIn,
@@ -17,50 +15,54 @@ function GameItem({
     clickPlayed,
     checkWantToPlay,
     checkPlayed,
-  } = useContext(UserContext)
-  const [validImage, setValidImage] = useState(true)
-  const [wantToPlay, setWantToPlay] = useState(false)
-  const [played, setPlayed] = useState(false)
-  const [click, setClick] = useState(0)
+  } = useContext(UserContext);
+
+  const [validImage, setValidImage] = useState(true);
+  const [wantToPlay, setWantToPlay] = useState(0);
+  const [played, setPlayed] = useState(0);
 
   useEffect(() => {
     if (background_image == null) {
-      setValidImage(false)
+      setValidImage(false);
     }
     if (isLoggedIn()) {
-      checkWantToPlay(id).then((response) => {
-        setWantToPlay(response.data)
-      })
-      checkPlayed(id).then((response) => {
-        setPlayed(response.data)
-      })
+      checkWantToPlay(gameID).then((response) => {
+        setWantToPlay(response.data);
+      });
+      checkPlayed(gameID).then((response) => {
+        setPlayed(response.data);
+      });
+    } else {
+      setWantToPlay(0);
+      setPlayed(0);
     }
-    setClick(0)
-  }, [click])
+  }, [background_image, gameID, isLoggedIn, checkWantToPlay, checkPlayed]);
 
   const handleClickWant = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (isLoggedIn()) {
-      await clickWantToPlay(id, userID)
-      setClick(1)
+      await clickWantToPlay(gameID).then((response) => {
+        setWantToPlay(response.data.checked);
+      });
     } else {
-      navigate('/login', { replace: true })
+      navigate('/login', { replace: true });
     }
-  }
+  };
 
   const handleClickPlayed = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (isLoggedIn()) {
-      await clickPlayed(id, userID)
-      setClick(1)
+      await clickPlayed(gameID).then((response) => {
+        setPlayed(response.data.checked);
+      });
     } else {
-      navigate('/login', { replace: true })
+      navigate('/login', { replace: true });
     }
-  }
+  };
 
   return (
     <div className='card w-72 mb-5 bg-base-200 shadow-xl'>
-      <Link to={`/game/${id}`}>
+      <Link to={`/game/${gameID}`}>
         {validImage && (
           <figure>
             <img
@@ -85,10 +87,10 @@ function GameItem({
       <div className='card-body'>
         <div className='card-title text-base mb-3'>
           <div className='inline badge badge-accent font-bold'>{rating}</div>
-          <Link to={`/game/${id}`}>{name}</Link>
+          <Link to={`/game/${gameID}`}>{name}</Link>
         </div>
         <div className='card-actions justify-start'>
-          {wantToPlay && (
+          {wantToPlay === 1 && (
             <button
               className='btn-ghost bg-primary badge badge-outline text-xs hover:bg-primary-focus'
               onClick={handleClickWant}
@@ -97,7 +99,7 @@ function GameItem({
               Added
             </button>
           )}
-          {!wantToPlay && (
+          {wantToPlay === 0 && (
             <button
               className='btn-ghost badge badge-outline text-xs hover:bg-primary-focus'
               onClick={handleClickWant}
@@ -106,7 +108,7 @@ function GameItem({
               Want to Play
             </button>
           )}
-          {played && (
+          {played === 1 && (
             <button
               className='btn-ghost bg-primary badge badge-outline text-xs hover:bg-primary-focus'
               onClick={handleClickPlayed}
@@ -115,7 +117,7 @@ function GameItem({
               Added
             </button>
           )}
-          {!played && (
+          {played === 0 && (
             <button
               className='btn-ghost badge badge-outline text-xs hover:bg-primary-focus'
               onClick={handleClickPlayed}
@@ -127,11 +129,11 @@ function GameItem({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 GameItem.propTypes = {
   game: PropTypes.object,
-}
+};
 
-export default GameItem
+export default GameItem;

@@ -15,9 +15,11 @@ function Navbar({ title }) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // get the logged user
-    getLoggedUserInSession()
-  }, [isLoggedIn()])
+    if (isLoggedIn()) {
+      // get the logged user
+      getLoggedUserInSession()
+    }
+  }, [])
 
   const handleChange = (e) => setText(e.target.value)
 
@@ -61,7 +63,7 @@ function Navbar({ title }) {
                 <button className='btn btn-ghost btn-circle'>
                   <Link
                     to={`/recommendations/${
-                      JSON.parse(sessionStorage.getItem('user')).userID
+                      JSON.parse(sessionStorage.getItem('user')).id
                     }`}
                     className='indicator'
                   >
@@ -141,7 +143,7 @@ function Navbar({ title }) {
                   <li>
                     <Link
                       to={`/profile/${
-                        JSON.parse(sessionStorage.getItem('user')).userID
+                        JSON.parse(sessionStorage.getItem('user')).id
                       }`}
                       className='text-lg'
                     >

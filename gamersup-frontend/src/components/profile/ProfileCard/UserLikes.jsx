@@ -30,7 +30,7 @@ function UserLikes({gamerId, likes}) {
         <div className="justify-center flex bg-base-200 rounded-[16px] p-2 grid grid-cols-1 gap-4 shadow-inner shadow-black" >
             <h2 className="inline-flex text-accent-focus py-1 text-xl">
                 Likes :
-                { gamerId !== user.userID && (
+                { gamerId !== user.id && (
                     <button className="btn-ghost badge badge-outline text-xs hover:bg-primary-focus mx-4 my-auto p-3" onClick={likesAdd}>
                         <FiThumbsUp className="inline mr-1 w-5 py-auto mx-2" />
                     </button>

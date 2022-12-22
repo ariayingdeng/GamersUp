@@ -1,4 +1,4 @@
-import { createContext, useReducer, useState } from 'react'
+import { createContext, useReducer } from 'react'
 import reviewReducer from './ReviewReducer'
 import axios from 'axios'
 
@@ -30,7 +30,6 @@ export const ReviewProvider = ({ children }) => {
       })
       .then((response) => {
         //response.data
-        console.log(response)
         dispatch({
           type: 'ADD_REVIEW',
           payload: response,

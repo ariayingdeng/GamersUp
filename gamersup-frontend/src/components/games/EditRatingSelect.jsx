@@ -13,7 +13,6 @@ function EditRatingSelect({ select, itemEdit }) {
     //+:make the value a number
     setEditSelected(+e.currentTarget.value)
     select(+e.currentTarget.value)
-    console.log('edit', editSelected)
   }
 
   return (

@@ -1,34 +1,42 @@
-import { React, useEffect, useContext, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import GamesContext from '../context/games/GamesContext'
-import ReviewContext from '../context/games/ReviewContext'
-import UserContext from '../context/user/UserContext'
-import Loading from '../components/layout/Loading'
-import gameimage from '../images/gameimage.jpg'
-import ReviewForm from '../components/games/ReviewForm'
-import ReviewsList from '../components/games/ReviewsList'
-import WantPlayedStats from '../components/games/WantPlayedStats'
+import { React, useEffect, useContext, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import GamesContext from '../context/games/GamesContext';
+import ReviewContext from '../context/games/ReviewContext';
+import Loading from '../components/layout/Loading';
+import gameimage from '../images/gameimage.jpg';
+import ReviewForm from '../components/games/ReviewForm';
+import ReviewsList from '../components/games/ReviewsList';
+import WantPlayedStats from '../components/games/WantPlayedStats';
 
 function GameDetailsPage() {
-  const { getGameByGameId, game, loading } = useContext(GamesContext)
+  const { getGameByID, loading } = useContext(GamesContext);
 
-  const { getReviewsByGameId, reviews } = useContext(ReviewContext)
+  const { getReviewsByGameId, reviews } = useContext(ReviewContext);
 
-  const { user } = useContext(UserContext)
+  const { gameid } = useParams();
 
-  const params = useParams()
+  const [game, setGame] = useState({});
 
   useEffect(() => {
-    getGameByGameId(params.id)
-    getReviewsByGameId(params.id)
-  }, [])
+    getGameByID(gameid)
+      .then((response) => {
+        setGame(response.data);
+      })
+      .catch((error) => {
+        console.log('error: ' + error);
+      });
+  }, [gameid]);
+
+  useEffect(() => {
+    getReviewsByGameId(gameid);
+  }, [gameid, reviews]);
 
   // destruct properties from game object
-  const { id, name, genres, background_image, rating, rating_top, website } =
-    game
+  const { name, genres, background_image, rating, rating_top, website } =
+    game;
 
   if (loading) {
-    return <Loading />
+    return <Loading />;
   } else {
     return (
       <>
@@ -95,7 +103,7 @@ function GameDetailsPage() {
                   <div className='stat'>
                     <div className='stat-title text-md'>Website</div>
                     <div className='text-lg stat-value'>
-                      <a href={`${website}`} target='_blank'>
+                      <a href={`${website}`} target='_blank' rel='noreferrer'>
                         Visit Website
                       </a>
                     </div>
@@ -103,15 +111,15 @@ function GameDetailsPage() {
                 )}
               </div>
 
-              <WantPlayedStats gameID={id} user={user} />
+              <WantPlayedStats gameID={gameid} />
             </div>
           </div>
-          <ReviewForm gameId={id} />
+          <ReviewForm gameId={gameid} />
           <ReviewsList reviews={reviews} />
         </div>
       </>
-    )
+    );
   }
 }
 
-export default GameDetailsPage
+export default GameDetailsPage;
