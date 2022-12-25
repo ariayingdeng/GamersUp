@@ -3,30 +3,26 @@ const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, { cors: { origin: '*' } });
 
-
-
 const users = {};
 
-
 io.on("connection", (socket) => { 
-    
-    socket.on("sendMessage", data => {       
-        console.log(data); 
-        io.emit("message", data);
-    })
-
     socket.on("join", user => {             
-        if (user != null && user.userID > 0) {            
+        if (user != null && user.id > 0) {            
             users[socket.id] = user;
-            console.log("User: " + users[socket.id].userName + socket.id);
+            console.log("User: " + users[socket.id].name + socket.id);
             socket.broadcast.emit("joined_user", user);
             io.emit('user-list', users);
         }
     })
 
+    socket.on("sendMessage", data => {       
+        console.log(data); 
+        io.emit("message", data);
+    })
+
     socket.on("chat_message", message => {
         socket.broadcast.emit('chat', {
-            username: users[socket.id],
+            name: users[socket.id],
             message: message
         })
     })
@@ -36,12 +32,10 @@ io.on("connection", (socket) => {
         console.log("Left: " + socket.id);
         if (users[socket.id] != null || users[socket.id] != undefined) {
             io.emit("left",
-            {username: users[socket.id].userName,
-            message: users[socket.id] + " left the chat room"});
-            
+            {name: users[socket.id].name,
+            message: users[socket.id] + " left the chat room"});   
         }
-        delete users[socket.id];       
-      
+        delete users[socket.id];
     })
     
 });

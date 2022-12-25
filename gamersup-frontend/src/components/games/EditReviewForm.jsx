@@ -1,62 +1,66 @@
-import { React, useContext, useState, useEffect } from 'react'
-import EditRatingSelect from './EditRatingSelect'
-import ReviewContext from '../../context/games/ReviewContext'
-import UserContext from '../../context/user/UserContext'
-import PropTypes from 'prop-types'
+import { React, useContext, useState, useEffect } from 'react';
+import EditRatingSelect from './EditRatingSelect';
+import ReviewContext from '../../context/games/ReviewContext';
+import UserContext from '../../context/user/UserContext';
+import PropTypes from 'prop-types';
+import { FaTimes } from 'react-icons/fa';
 
-function EditReviewForm({ gameId, itemEdit }) {
-  const { editReview } = useContext(ReviewContext)
-  const { user, isLoggedIn } = useContext(UserContext)
+function EditReviewForm({ gameId, itemEdit, closeEditForm }) {
+  const { editReview } = useContext(ReviewContext);
+  const { user, isLoggedIn } = useContext(UserContext);
 
-  const [text, setText] = useState('')
-  const [rating, setRating] = useState(5)
-  const [btnDisabled, setBtnDisabled] = useState(true)
-  const [message, setMessage] = useState('')
+  const [text, setText] = useState('');
+  const [rating, setRating] = useState(5);
+  const [btnDisabled, setBtnDisabled] = useState(true);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (itemEdit.edit === true) {
-      setBtnDisabled(false)
-      setText(itemEdit.item.comment)
-      setRating(itemEdit.item.rating)
+      setBtnDisabled(false);
+      setText(itemEdit.item.comment);
+      setRating(itemEdit.item.rating);
     }
-  }, [itemEdit])
+  }, [itemEdit]);
 
   const handleTextChange = (e) => {
     if (!isLoggedIn()) {
-      setMessage('Please sign in to make a review.')
+      setMessage('Please sign in to make a review.');
     } else if (text === '') {
-      setBtnDisabled(true)
-      setMessage(null)
+      setBtnDisabled(true);
+      setMessage(null);
     } else if (text !== '' && text.trim().length < 4) {
-      setBtnDisabled(true)
-      setMessage('Please enter at least 5 characters.')
+      setBtnDisabled(true);
+      setMessage('Please enter at least 5 characters.');
     } else {
-      setBtnDisabled(false)
-      setMessage(null)
+      setBtnDisabled(false);
+      setMessage(null);
     }
-    setText(e.target.value)
-  }
+    setText(e.target.value);
+  };
 
   const handleSelectEdit = (selected) => {
-    setRating(selected)
-  }
+    setRating(selected);
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const reviewID = itemEdit.item.id
-    const userID = user.id
+    e.preventDefault();
+    const reviewID = itemEdit.item.id;
+    const userID = user.id;
     const newItem = {
       id: reviewID,
       userID: userID,
       gameID: gameId,
       rating: rating,
       comment: text,
-    }
-    editReview(reviewID, newItem)
-  }
+    };
+    editReview(reviewID, newItem);
+  };
 
   return (
     <div className='w-full rounded-lg shadow-lg review-card-edit bg-fuchsia-900'>
+      <button onClick={closeEditForm} className='close'>
+        <FaTimes color='pink' />
+      </button>
       <form onSubmit={handleSubmit}>
         <EditRatingSelect select={handleSelectEdit} itemEdit={itemEdit} />
         <div className='input-group text-neutral-content'>
@@ -78,15 +82,15 @@ function EditReviewForm({ gameId, itemEdit }) {
         {message && <div className='message'>{message}</div>}
       </form>
     </div>
-  )
+  );
 }
 
 EditReviewForm.defaultProps = {
   itemEdit: { item: {}, edit: false },
-}
+};
 
 EditReviewForm.propTypes = {
   itemEdit: PropTypes.object,
-}
+};
 
-export default EditReviewForm
+export default EditReviewForm;

@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ReviewContext from '../../context/games/ReviewContext';
 import UserContext from '../../context/user/UserContext';
-import { FaTimes, FaEdit, FaStar, FaCommentDots, FaUser } from 'react-icons/fa';
+import { FaTimes, FaEdit, FaStar, FaCommentDots } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import EditReviewForm from '../games/EditReviewForm';
 import gamerAvatar from '../../images/gamers-logo.png';
@@ -38,6 +38,13 @@ function ReviewItem({ item }) {
         edit: false,
       });
     }
+  };
+
+  const closeEditForm = (e) => {
+    setItemEdit({
+      item: {},
+      edit: false,
+    });
   };
 
   if (rating !== 0 && rating !== 6) {
@@ -91,7 +98,11 @@ function ReviewItem({ item }) {
           </div>
         </div>
         {itemEdit.edit && (
-          <EditReviewForm gameId={gameID} itemEdit={itemEdit} />
+          <EditReviewForm
+            gameId={gameID}
+            itemEdit={itemEdit}
+            closeEditForm={closeEditForm}
+          />
         )}
       </>
     );

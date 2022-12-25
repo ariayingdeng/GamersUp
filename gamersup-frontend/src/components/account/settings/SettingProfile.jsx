@@ -9,32 +9,42 @@ import Alert from '../../layout/Alert';
 import axios from 'axios';
 
 function SettingProfile() {
-  const { user, changeAvatar, changeLevel, changeBirthday, changeBio } =
-    useContext(UserContext);
+  const { user, updateSettings, getUserInfoByEmail } = useContext(UserContext);
   const { setAlertWithTimeout } = useContext(AlertContext);
 
   // const { id, name, email, dob, level, likes, bio, avatarUrl } = user;
 
-  const [img, setImgFile] = useState("");
+  const [imgFile, setImgFile] = useState('');
+  const [imgUrl, setImgUrl] = useState(user.avatarUrl);
   const [level, setLevel] = useState(user.level);
   const [birthday, setBirthday] = useState(user.dob);
   const [bio, setBio] = useState(user.bio);
 
-  const handleSubmitProfile = (e) => {
+  const handleSubmitProfile = async (e) => {
     e.preventDefault();
-    if (img !== '') {
-      uploadAvatar(img);
+    if (imgFile !== '') {
+      await uploadAvatar(imgFile)
+        .then((response) => {
+          handleUpdateSettings(user.id, response.data.url, level, birthday, bio);
+        })
+        .catch((error) => {
+          setAlertWithTimeout('The file size is too big!', 'information');
+        });
+    } else {
+      handleUpdateSettings(user.id, imgUrl, level, birthday, bio);
     }
-    if (level !== '') {
-      changeLevel(level);
-    }
-    if (birthday !== null) {
-      changeBirthday(birthday);
-    }
-    if (bio !== '') {
-      changeBio(bio);
-    }
-    setAlertWithTimeout('Saved successfully!', 'information');
+  };
+
+  const handleUpdateSettings = async (userId, img, level, birthday, bio) => {
+    await updateSettings(userId, img, level, birthday, bio)
+      .then((res) => {
+        getUserInfoByEmail(user.email);
+        setAlertWithTimeout('Saved successfully!', 'information');
+      })
+      .catch((err) => {
+        console.log(err);
+        setAlertWithTimeout('Something went wrong!', 'error');
+      });
   };
 
   const uploadAvatar = async (imageSelected) => {
@@ -42,14 +52,10 @@ function SettingProfile() {
     formData.append('file', imageSelected);
     formData.append('upload_preset', 'douglas_finalProject');
 
-    axios
-      .post('https://api.cloudinary.com/v1_1/mydouglasproject/upload', formData)
-      .then((response) => {
-        changeAvatar(response.data.url);
-      })
-      .catch((error) => {
-        setAlertWithTimeout('The file size is too big!', 'information');
-      });
+    return await axios.post(
+      'https://api.cloudinary.com/v1_1/mydouglasproject/upload',
+      formData
+    );
   };
 
   return (

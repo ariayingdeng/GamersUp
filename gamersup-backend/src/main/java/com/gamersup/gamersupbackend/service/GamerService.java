@@ -1,6 +1,7 @@
 package com.gamersup.gamersupbackend.service;
 
 import com.gamersup.gamersupbackend.model.Friends;
+import com.gamersup.gamersupbackend.model.profile.GamerSettingsRequest;
 import com.gamersup.gamersupbackend.repo.FriendRepository;
 import com.gamersup.gamersupbackend.repo.UserRepository;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailSender;
@@ -77,14 +78,15 @@ public class GamerService {
 //        }
 //    }
 
-//    public GamerInfo updateGamer(long id, GamerInfo gamer) {
-//        GamerInfo existingGamer = gamerRepository.findById(id).orElseThrow(() ->
-//                new ResourceNotFoundException("Gamer", "Id", id));
-//        existingGamer.setUserName(gamer.getUsername());
-//        existingGamer.setEmail(gamer.getEmail());
-//        existingGamer.setPassword(gamer.getPassword());
-//        return gamerRepository.save(existingGamer);
-//    }
+    public GamerInfo updateGamerInfo(GamerSettingsRequest settingsRequest) {
+        GamerInfo updatedGamer = gamerRepository.findById(settingsRequest.getUserId()).orElseThrow(() ->
+                new ResourceNotFoundException("Gamer", "Id", settingsRequest.getUserId()));
+        updatedGamer.setAvatarUrl(settingsRequest.getAvatarUrl());
+        updatedGamer.setLevel(settingsRequest.getLevel());
+        updatedGamer.setDob(settingsRequest.getDob());
+        updatedGamer.setBio(settingsRequest.getBio());
+        return gamerRepository.save(updatedGamer);
+    }
 
     public void deleteGamer(String email) {
         gamerRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Gamer", "Email", email));

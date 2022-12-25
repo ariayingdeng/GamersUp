@@ -10,7 +10,7 @@ function GameItemR({ userID, gameID }) {
     useContext(UserContext)
 
   const [game, setGame] = useState({})
-  const [wantToPlay, setWantToPlay] = useState(false)
+  const [wantToPlay, setWantToPlay] = useState(0)
   const [click, setClick] = useState(0)
 
   useEffect(() => {
@@ -72,7 +72,7 @@ function GameItemR({ userID, gameID }) {
               </a>
             )}
           </div>
-          {wantToPlay && (
+          {wantToPlay === 1 && (
             <div
               className='btn-ghost bg-primary btn-outline rounded-full text-xs px-2 hover:bg-primary-focus'
               onClick={handleClickWant}
@@ -81,7 +81,7 @@ function GameItemR({ userID, gameID }) {
               Added
             </div>
           )}
-          {!wantToPlay && (
+          {wantToPlay === 0 && (
             <div
               className='btn-ghost btn-outline rounded-full text-xs px-2 hover:bg-primary-focus'
               onClick={handleClickWant}

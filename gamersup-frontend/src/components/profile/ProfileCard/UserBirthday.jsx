@@ -6,13 +6,16 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 function UserBirthday({ gamerId, dob }) {
-  const { user, changeBirthday } = useContext(UserContext);
+  const { user, changeBirthday, getUserInfoByEmail } = useContext(UserContext);
   const [newBirthday, setNewBirthDay] = useState(dob);
   const [birthday, setBirthday] = useState(dob);
   const [changing, setChanging] = useState(false);
 
   const uploadBirthday = async (e) => {
-    changeBirthday(newBirthday);
+    e.preventDefault();
+    await changeBirthday(newBirthday).then((res) => {
+      getUserInfoByEmail(user.email);
+    });
     setBirthday(newBirthday);
     birthdayChange();
   };

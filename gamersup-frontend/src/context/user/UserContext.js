@@ -337,6 +337,17 @@ export const UserProvider = ({ children }) => {
     });
   };
 
+  /** Update the settings of the user */
+  const updateSettings = async (userId, avatarUrl, level, dob, bio) => {
+    return await axios.put(`${API_URL}/gamerinfo/update/settings`, {
+      userId,
+      avatarUrl,
+      level,
+      dob,
+      bio,
+    });
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -380,6 +391,7 @@ export const UserProvider = ({ children }) => {
         hasRatings,
         changePassword,
         executeGoogleAuthService,
+        updateSettings,
       }}
     >
       {children}
