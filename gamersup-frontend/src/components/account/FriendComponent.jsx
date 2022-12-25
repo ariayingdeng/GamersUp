@@ -4,7 +4,7 @@ import gamerAvatar from '../../images/gamers-logo.png'
 function FriendComponent({ friend }) {
   return (
     <li className='w-48 rounded-full bg-base-300 mx-3 my-2'>
-      <a href={'/profile/' + friend.userID}>
+      <a href={'/profile/' + friend.id}>
         {friend.avatarUrl !== null && (
           <img
             src={friend.avatarUrl}
@@ -19,7 +19,7 @@ function FriendComponent({ friend }) {
             className='w-14 rounded-full avatar'
           />
         )}
-        <div className='my-auto text-base'>{friend.userName}</div>
+        <div className='my-auto text-base'>{friend.name}</div>
       </a>     
     </li>
   )

@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/recommendations")
 @AllArgsConstructor
-@CrossOrigin(origins="http://localhost:5365")
+@CrossOrigin(origins="http://localhost:5252")
 public class RecommendationApi {
     private GamerService gamerService;
     private ReviewService reviewService;

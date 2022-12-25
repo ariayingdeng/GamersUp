@@ -1,12 +1,14 @@
 package com.gamersup.gamersupbackend.service;
 
-import com.gamersup.gamersupbackend.model.account.ChangePasswordRequest;
-import com.gamersup.gamersupbackend.model.account.ResetPasswordRequest;
+import com.gamersup.gamersupbackend.model.account.ChangePasswordWithCurrentPassRequest;
+import com.gamersup.gamersupbackend.model.account.ForgotPasswordRequest;
 import com.gamersup.gamersupbackend.model.account.User;
 import com.gamersup.gamersupbackend.service.account_service.UserService;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailSender;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailValidatorService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Random;
 
@@ -14,8 +16,10 @@ import java.util.Random;
 @Service
 public record ResetPasswordService(UserService userService,
                                    EmailValidatorService emailValidator,
+
                                    EmailSender emailSender) {
-    public String resetPassword(ResetPasswordRequest request) {
+
+    public String resetPassword(ForgotPasswordRequest request) {
         if (!emailValidator.test(request.getEmail())) {
             return "Invalid email";
         }
@@ -30,10 +34,13 @@ public record ResetPasswordService(UserService userService,
         return "successful";
     }
 
-    public String changePassword(ChangePasswordRequest request) {
-        User user = userService.getUserByEmail(request.getEmail());
-        userService.updatePassword(user, request.getPassword());
-        return "successful";
+    public boolean changePassword(ChangePasswordWithCurrentPassRequest request) {
+        User user = userService.getUserById(request.getUserId());
+        if (userService.checkPassword(user, request.getCurrentPassword())) {
+            userService.updatePassword(user, request.getNewPassword());
+            return true;
+        }
+        return false;
     }
 
     private String generateRandomPassword() {

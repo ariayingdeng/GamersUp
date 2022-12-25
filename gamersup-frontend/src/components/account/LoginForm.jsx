@@ -20,7 +20,6 @@ function LoginForm() {
   const { setAlertWithTimeout } = useContext(AlertContext);
 
   const {
-    user,
     isLoggedIn,
     executeAuthenticationService,
     getUserInfoByEmail,
@@ -31,34 +30,39 @@ function LoginForm() {
   // const REGISTER_SESSION = process.env.REACT_APP_REGISTER_SESSION
 
   useEffect(() => {
-    if (isLoggedIn && user.level === null) {
-      navigate('/settings', { replace: true });
+    if (isLoggedIn()) {
+      navigate('/', { replace: true });
     }
   }, [isLoggedIn]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    executeAuthenticationService(email, password)
-      .then(() => {
-        getUserInfoByEmail(email);
+    await executeAuthenticationService(email, password)
+      .then((response) => {
+        if (response.status === 200) {
+          getUserInfoByEmail(email);
+          navigate('/', { replace: true });
+        } else {
+          setAlertWithTimeout('Invalid credentials.', 'error');
+        }
       })
       .catch((err) => {
         if (err.response) {
-          setAlertWithTimeout(err.response.data.error, 'error');
+          setAlertWithTimeout('Invalid credentials.', 'error');
         } else if (err.request) {
-          setAlertWithTimeout(err.request, 'error');
+          setAlertWithTimeout('Please try again later.', 'error');
         } else {
-          setAlertWithTimeout(err.message, 'error');
+          setAlertWithTimeout('Please try again later.', 'error');
         }
       });
   };
 
   /** For Google Login */
-  const handleCallbackResponse = (response) => {
+  const handleCallbackResponse = async (response) => {
     const user = jwtDecode(response.credential);
-    executeGoogleAuthService(user.name, user.email, user.picture)
+    await executeGoogleAuthService(user.name, user.email, user.picture)
       .then(() => {
         getUserInfoByEmail(user.email);
       })

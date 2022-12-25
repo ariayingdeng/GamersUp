@@ -1,13 +1,21 @@
-import { React, useState } from 'react'
-import DatePicker from 'react-datepicker'
+import { React, useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-function SettingBday({ setBirthday }) {
-  const [newBirthday, setNewBirthDay] = useState()
+function SettingBday({ birthday, setBirthday }) {
 
-  const handleChangeBd = async (newDate) => {
-    setBirthday(newDate)
-    setNewBirthDay(newDate)
-  }
+  const [newBirthday, setNewBirthDay] = useState(new Date());
+
+  useEffect(() => {
+    if (birthday !== null) {
+      setNewBirthDay(new Date(birthday));
+    } 
+  }, []);
+
+  const handleChangeBd = (newDate) => {
+    setBirthday(new Date(newDate));
+    setNewBirthDay(new Date(newDate));
+  };
 
   return (
     <div className='mb-10 pb-4'>
@@ -18,11 +26,11 @@ function SettingBday({ setBirthday }) {
           selected={newBirthday}
           id='datepicker'
           onChange={(newDate) => handleChangeBd(newDate)}
-          showYearDropdown 
+          showYearDropdown
         />
       </div>
     </div>
-  )
+  );
 }
 
-export default SettingBday
+export default SettingBday;

@@ -1,10 +1,10 @@
-import { createContext, useReducer } from 'react'
-import reviewReducer from './ReviewReducer'
-import axios from 'axios'
+import { createContext, useReducer } from 'react';
+import reviewReducer from './ReviewReducer';
+import axios from 'axios';
 
-const ReviewContext = createContext()
+const ReviewContext = createContext();
 
-const API_URL = process.env.REACT_APP_BACKEND_API_URL
+const API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 export const ReviewProvider = ({ children }) => {
   const initialState = {
@@ -12,12 +12,12 @@ export const ReviewProvider = ({ children }) => {
     review: {},
     loading: true,
     error: false,
-  }
+  };
 
-  const [state, dispatch] = useReducer(reviewReducer, initialState)
+  const [state, dispatch] = useReducer(reviewReducer, initialState);
 
   //Set loading
-  const setLoading = () => dispatch({ type: 'LOADING' })
+  const setLoading = () => dispatch({ type: 'LOADING' });
 
   // Add a new review to database
   const addReview = (userID, gameID, rating, comment) => {
@@ -33,60 +33,45 @@ export const ReviewProvider = ({ children }) => {
         dispatch({
           type: 'ADD_REVIEW',
           payload: response,
-        })
+        });
       })
       .catch(() => {
         dispatch({
           type: 'REVIEW_ERROR',
-        })
-      })
-  }
+        });
+      });
+  };
 
-  const getReviewsByGameId = (gameID) => {
-    setLoading()
-    axios
-      .get(`${API_URL}/reviews/game=${gameID}/all`)
-      .then((response) => {
-        //response.data
-        // console.log(response.data)
-        dispatch({
-          type: 'GET_GAME_REVIEWS',
-          payload: response.data,
-        })
-      })
-      .catch(() => {
-        dispatch({
-          type: 'REVIEW_ERROR',
-        })
-      })
-  }
+  const getReviewsByGameId = async (gameID) => {
+    return await axios.get(`${API_URL}/reviews/game=${gameID}/all`);
+  };
 
   // Delete a post in database
   const deleteReview = async (reviewID) => {
-    setLoading()
+    setLoading();
     if (window.confirm('Are you sure to delete this review?')) {
       axios
         .delete(`${API_URL}/reviews/review=${reviewID}`)
         .then(() => {
           const newReviews = state.reviews.filter(
             (item) => item.id !== reviewID
-          )
+          );
           dispatch({
             type: 'GET_GAME_REVIEWS',
             payload: newReviews,
-          })
+          });
         })
         .catch(() => {
           dispatch({
             type: 'REVIEW_ERROR',
-          })
-        })
+          });
+        });
     }
-  }
+  };
 
   const editReview = (reviewID, newItem) => {
-    return axios.put(`${API_URL}/reviews/review=${reviewID}`, newItem)
-  }
+    return axios.put(`${API_URL}/reviews/review=${reviewID}`, newItem);
+  };
 
   return (
     <ReviewContext.Provider
@@ -103,7 +88,7 @@ export const ReviewProvider = ({ children }) => {
     >
       {children}
     </ReviewContext.Provider>
-  )
-}
+  );
+};
 
-export default ReviewContext
+export default ReviewContext;

@@ -1,6 +1,7 @@
 package com.gamersup.gamersupbackend.service;
 
 import com.gamersup.gamersupbackend.model.Friends;
+import com.gamersup.gamersupbackend.model.profile.GamerSettingsRequest;
 import com.gamersup.gamersupbackend.repo.FriendRepository;
 import com.gamersup.gamersupbackend.repo.UserRepository;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailSender;
@@ -77,14 +78,15 @@ public class GamerService {
 //        }
 //    }
 
-//    public GamerInfo updateGamer(long id, GamerInfo gamer) {
-//        GamerInfo existingGamer = gamerRepository.findById(id).orElseThrow(() ->
-//                new ResourceNotFoundException("Gamer", "Id", id));
-//        existingGamer.setUserName(gamer.getUsername());
-//        existingGamer.setEmail(gamer.getEmail());
-//        existingGamer.setPassword(gamer.getPassword());
-//        return gamerRepository.save(existingGamer);
-//    }
+    public GamerInfo updateGamerInfo(GamerSettingsRequest settingsRequest) {
+        GamerInfo updatedGamer = gamerRepository.findById(settingsRequest.getUserId()).orElseThrow(() ->
+                new ResourceNotFoundException("Gamer", "Id", settingsRequest.getUserId()));
+        updatedGamer.setAvatarUrl(settingsRequest.getAvatarUrl());
+        updatedGamer.setLevel(settingsRequest.getLevel());
+        updatedGamer.setDob(settingsRequest.getDob());
+        updatedGamer.setBio(settingsRequest.getBio());
+        return gamerRepository.save(updatedGamer);
+    }
 
     public void deleteGamer(String email) {
         gamerRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Gamer", "Email", email));
@@ -283,7 +285,7 @@ public class GamerService {
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
                 "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + nameB + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> The gamer " + nameA + " invited you as a friend." + " </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
-                "        \n" + "<a href=\"" + "http://localhost:4200/acceptFriend/" + idA + "&" + idB + "\">Accept</a>" +
+                "        \n" + "<a href=\"" + "http://localhost:5252/acceptFriend/" + idA + "&" + idB + "\">Accept</a>" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n"  +
                 "    </tr>\n" +

@@ -32,6 +32,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public boolean checkPassword(User user, String rawPassword) {
+        if(passwordEncoder.matches(rawPassword, user.getPassword())) {
+            return true;
+        }
+        return false;
+    }
+
     public void loginGoogleUser(String name, String email, String avatarUrl) {
         Optional<User> user = userRepository.findByEmail(email);
         if (!user.isPresent()) {

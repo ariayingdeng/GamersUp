@@ -5,7 +5,7 @@ import FriendComponent from '../account/FriendComponent'
 
 function FriendList() {
   const { isLoggedIn, getFriends } = useContext(UserContext)
-  const [localFriends, setLocalFriends] = useState()
+  const [localFriends, setLocalFriends] = useState([])
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -18,7 +18,6 @@ function FriendList() {
   return (
     <>
       {localFriends?.map((friend, index) => (
-        // hardcode
         <FriendComponent key={index} friend={friend} />
       ))}
     </>

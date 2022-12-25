@@ -4,13 +4,15 @@ import { FaPencilAlt } from 'react-icons/fa';
 import LevelSelect from './LevelSelect';
 
 function UserLevel({ gamerId, level }) {
-  const { user, changeLevel } = useContext(UserContext);
+  const { user, changeLevel, getUserInfoByEmail } = useContext(UserContext);
   const [currentLevel, setCurrentLevel] = useState(level);
   const [changing, setChanging] = useState(false);
   const [tempLevel, setTempLevel] = useState(currentLevel);
 
   const uploadLevel = async (e) => {
-    await changeLevel(tempLevel);
+    await changeLevel(tempLevel).then((res) => {
+      getUserInfoByEmail(user.email);
+    });
     setCurrentLevel(tempLevel);
   };
 

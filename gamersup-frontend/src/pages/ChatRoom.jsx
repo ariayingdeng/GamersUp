@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import socketIOClient from 'socket.io-client'
 import FriendComponent from '../components/account/FriendComponent'
 
@@ -12,7 +12,7 @@ function ChatRoom() {
 
   useMountEffect(() => {
     ws.off('join_user').on('joined_user', (data) => {
-      if (data != null && data.userID > 0) {
+      if (data !== null && data.id > 0) {
         getMessage(data, 'join')
       }
     })
@@ -23,8 +23,7 @@ function ChatRoom() {
       getMessage(data, 'left')
     })
     ws.on('user-list', (data) => {
-      console.log(data)
-      if (data != null) setUserList(data)
+      if (data !== null) setUserList(data)
     })
     return () => {
       ws.off('joined_user')
@@ -35,7 +34,7 @@ function ChatRoom() {
   }, [])
 
   useEffect(() => {
-    if (user != null) {
+    if (user !== null) {
       ws.emit('join', user)
     }
   }, [ws])
@@ -46,13 +45,13 @@ function ChatRoom() {
     let messageContainer = document.createElement('div')
     switch (type) {
       case 'message':
-        messageContainer.innerText = data.username + ': ' + data.message
+        messageContainer.innerText = data.name + ': ' + data.message
         break
       case 'join':
-        messageContainer.innerText = data.userName + ' joined the room'
+        messageContainer.innerText = data.name + ' joined the room'
         break
       case 'left':
-        messageContainer.innerText = data.username + ' left the room'
+        messageContainer.innerText = data.name + ' left the room'
         break
       default:
         break
@@ -67,11 +66,11 @@ function ChatRoom() {
   }
 
   const sendMessage = (e) => {
-    if (document.querySelector('.messageInput').value == '') return
+    if (document.querySelector('.messageInput').value === '') return
     const message = document.querySelector('.messageInput').value
     document.querySelector('.messageInput').value = ''
     ws.emit('sendMessage', {
-      username: user.userName,
+      name: user.name,
       message: message,
     })
   }
@@ -125,7 +124,7 @@ function ChatRoom() {
         </li>
         {Object.keys(userList).map((socketID) => (
           <FriendComponent
-            key={userList[socketID].userID}
+            key={userList[socketID].id}
             friend={userList[socketID]}
           />
         ))}

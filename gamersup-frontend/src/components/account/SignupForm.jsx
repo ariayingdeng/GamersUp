@@ -2,10 +2,12 @@ import { React, useContext, useState } from 'react'
 import AlertContext from '../../context/alert/AlertContext'
 import UserContext from '../../context/user/UserContext'
 import { LockClosedIcon, EyeIcon, EyeOffIcon } from '@heroicons/react/solid'
+import { useNavigate } from 'react-router-dom';
 
 function SignupForm() {
-  const { setAlert, setAlertWithTimeout } = useContext(AlertContext)
+  const navigate = useNavigate();
 
+  const { setAlertWithTimeout } = useContext(AlertContext)
   const { executeRegisterService, error } = useContext(UserContext)
 
   const [showPassword, setShowPassword] = useState(false)
@@ -36,7 +38,8 @@ function SignupForm() {
       if (error) {
         setAlertWithTimeout('Your email has been taken.', 'error')
       } else {
-        setAlert('Please check your email inbox for verification.', 'information')
+        setAlertWithTimeout('Please check your email inbox for verification.', 'information')
+        navigate('/login', { replace: true });
       }
     }
   }

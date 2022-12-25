@@ -11,11 +11,12 @@ import WantPlayedStats from '../components/games/WantPlayedStats';
 function GameDetailsPage() {
   const { getGameByID, loading } = useContext(GamesContext);
 
-  const { getReviewsByGameId, reviews } = useContext(ReviewContext);
+  const { getReviewsByGameId } = useContext(ReviewContext);
 
   const { gameid } = useParams();
 
   const [game, setGame] = useState({});
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     getGameByID(gameid)
@@ -23,17 +24,22 @@ function GameDetailsPage() {
         setGame(response.data);
       })
       .catch((error) => {
-        console.log('error: ' + error);
+        console.log('Getting game error: ' + error);
       });
   }, [gameid]);
 
   useEffect(() => {
-    getReviewsByGameId(gameid);
+    getReviewsByGameId(gameid)
+      .then((response) => {
+        setReviews(response.data);
+      })
+      .catch((error) => {
+        console.log('Getting reviews error: ' + error);
+      });
   }, [gameid, reviews]);
 
   // destruct properties from game object
-  const { name, genres, background_image, rating, rating_top, website } =
-    game;
+  const { name, genres, background_image, rating, rating_top, website } = game;
 
   if (loading) {
     return <Loading />;

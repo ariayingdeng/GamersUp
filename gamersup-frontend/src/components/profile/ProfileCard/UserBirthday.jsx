@@ -1,27 +1,29 @@
-import { useContext, useState } from 'react'
-import UserContext from '../../../context/user/UserContext'
-import { FaPencilAlt } from 'react-icons/fa'
-import Moment from 'moment'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import { useContext, useState } from 'react';
+import UserContext from '../../../context/user/UserContext';
+import { FaPencilAlt } from 'react-icons/fa';
+import Moment from 'moment';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function UserBirthday({ gamerId, dob }) {
-  const { user, changeBirthday } = useContext(UserContext)
-  const [newBirthday, setNewBirthDay] = useState(dob)
-  const [birthday, setBirthday] = useState(dob)
-  const [changing, setChanging] = useState(false)
+  const { user, changeBirthday, getUserInfoByEmail } = useContext(UserContext);
+  const [newBirthday, setNewBirthDay] = useState(dob);
+  const [birthday, setBirthday] = useState(dob);
+  const [changing, setChanging] = useState(false);
 
   const uploadBirthday = async (e) => {
-    console.log(newBirthday)
-    changeBirthday(newBirthday)
-    setBirthday(newBirthday)
-    birthdayChange()
-  }
+    e.preventDefault();
+    await changeBirthday(newBirthday).then((res) => {
+      getUserInfoByEmail(user.email);
+    });
+    setBirthday(newBirthday);
+    birthdayChange();
+  };
 
   const birthdayChange = () => {
-    setChanging(!changing)
-    setNewBirthDay(birthday)
-  }
+    setChanging(!changing);
+    setNewBirthDay(birthday);
+  };
 
   return (
     <div
@@ -29,8 +31,8 @@ function UserBirthday({ gamerId, dob }) {
       id='userBirthday'
     >
       <h2 className='inline-flex text-accent-focus py-1 text-xl'>
-        BirthDay:{' '}
-        {user.id == gamerId && (
+        BirthDay:
+        {user.id === gamerId && (
           <button
             className='btn-ghost badge badge-outline text-xs mx-4 my-auto p-3 absolute right-12'
             onClick={birthdayChange}
@@ -38,10 +40,12 @@ function UserBirthday({ gamerId, dob }) {
             <FaPencilAlt />
           </button>
         )}
-      </h2>{' '}
+      </h2>
       {!changing && (
         <h2 className='inline-flex text-neutral-content py-1 text-3xl'>
-          &nbsp;&nbsp;{Moment(birthday).format('DD-MMM-YYYY')}
+          &nbsp;&nbsp;
+          {birthday !== null && Moment(birthday).format('MMM DD, YYYY')}
+          {birthday === null && 'Not Set'}
         </h2>
       )}
       {changing && (
@@ -63,7 +67,7 @@ function UserBirthday({ gamerId, dob }) {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default UserBirthday
+export default UserBirthday;

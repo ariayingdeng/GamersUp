@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/games")
 @AllArgsConstructor
-@CrossOrigin(origins="http://localhost:5365")
+@CrossOrigin(origins="http://localhost:5252")
 public class GameApi {
     private GameService gameService;
 

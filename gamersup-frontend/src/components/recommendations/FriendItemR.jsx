@@ -73,9 +73,9 @@ function FriendItemR({ userID, gamerID }) {
         </div>
         <div className='w-40'>
           <div className='flex'>
-            <h2 className='card-title'>
-              <Link to={`/profile/` + gamerID}>{gamer.userName}</Link>
-            </h2>
+            <h3 className='card-title'>
+              <Link to={`/profile/` + gamerID}>{gamer.name}</Link>
+            </h3>
             <div className='badge badge-success font-semibold ml-3 mt-1'>
               {gamer.level === 0 && <span>Newbie</span>}
               {gamer.level === 1 && <span>Veteran</span>}

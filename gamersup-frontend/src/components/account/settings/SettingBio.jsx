@@ -1,12 +1,18 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react';
 
-function SettingBio({ setBio }) {
-  const [text, setText] = useState('')
+function SettingBio({ bio, setBio }) {
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    if (bio !== null) {
+      setText(bio);
+    }
+  }, []);
 
   const handleTextChange = (e) => {
-    setText(e.target.value)
-    setBio(e.target.value)
-  }
+    setText(e.target.value);
+    setBio(e.target.value);
+  };
 
   return (
     <div className='mb-10 pb-4'>
@@ -21,7 +27,7 @@ function SettingBio({ setBio }) {
         />
       </div>
     </div>
-  )
+  );
 }
 
-export default SettingBio
+export default SettingBio;

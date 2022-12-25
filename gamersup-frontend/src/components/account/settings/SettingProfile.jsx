@@ -1,53 +1,62 @@
-import { React, useContext, useState } from 'react'
-import UserContext from '../../../context/user/UserContext'
-import AlertContext from '../../../context/alert/AlertContext'
-import SettingAvatar from './SettingAvatar'
-import SettingBday from './SettingBday'
-import SettingBio from './SettingBio'
-import SettingLevel from './SettingLevel'
-import Alert from '../../layout/Alert'
-import axios from 'axios'
+import { React, useContext, useState } from 'react';
+import UserContext from '../../../context/user/UserContext';
+import AlertContext from '../../../context/alert/AlertContext';
+import SettingAvatar from './SettingAvatar';
+import SettingBday from './SettingBday';
+import SettingBio from './SettingBio';
+import SettingLevel from './SettingLevel';
+import Alert from '../../layout/Alert';
+import axios from 'axios';
 
 function SettingProfile() {
-  const { changeAvatar, changeLevel, changeBirthday, changeBio } =
-    useContext(UserContext)
-  const { setAlertWithTimeout } = useContext(AlertContext)
+  const { user, updateSettings, getUserInfoByEmail } = useContext(UserContext);
+  const { setAlertWithTimeout } = useContext(AlertContext);
 
-  const [img, setImgFile] = useState('')
-  const [level, setLevel] = useState('')
-  const [birthday, setBirthday] = useState(null)
-  const [bio, setBio] = useState('')
+  // const { id, name, email, dob, level, likes, bio, avatarUrl } = user;
 
-  const handleSubmitProfile = () => {
-    if (img !== '') {
-      uploadAvatar(img)
+  const [imgFile, setImgFile] = useState('');
+  const [imgUrl, setImgUrl] = useState(user.avatarUrl);
+  const [level, setLevel] = useState(user.level);
+  const [birthday, setBirthday] = useState(user.dob);
+  const [bio, setBio] = useState(user.bio);
+
+  const handleSubmitProfile = async (e) => {
+    e.preventDefault();
+    if (imgFile !== '') {
+      await uploadAvatar(imgFile)
+        .then((response) => {
+          handleUpdateSettings(user.id, response.data.url, level, birthday, bio);
+        })
+        .catch((error) => {
+          setAlertWithTimeout('The file size is too big!', 'information');
+        });
+    } else {
+      handleUpdateSettings(user.id, imgUrl, level, birthday, bio);
     }
-    if (level !== '') {
-      changeLevel(level)
-    }
-    if (birthday !== null) {
-      changeBirthday(birthday)
-    }
-    if (bio !== '') {
-      changeBio(bio)
-    }
-    setAlertWithTimeout('Saved successfully!', 'information')
-  }
+  };
+
+  const handleUpdateSettings = async (userId, img, level, birthday, bio) => {
+    await updateSettings(userId, img, level, birthday, bio)
+      .then((res) => {
+        getUserInfoByEmail(user.email);
+        setAlertWithTimeout('Saved successfully!', 'information');
+      })
+      .catch((err) => {
+        console.log(err);
+        setAlertWithTimeout('Something went wrong!', 'error');
+      });
+  };
 
   const uploadAvatar = async (imageSelected) => {
-    const formData = new FormData()
-    formData.append('file', imageSelected)
-    formData.append('upload_preset', 'douglas_finalProject')
+    const formData = new FormData();
+    formData.append('file', imageSelected);
+    formData.append('upload_preset', 'douglas_finalProject');
 
-    axios
-      .post('https://api.cloudinary.com/v1_1/mydouglasproject/upload', formData)
-      .then((response) => {
-        changeAvatar(response.data.url)
-      })
-      .catch((error) => {
-        setAlertWithTimeout('The file size is too big!', 'information')
-      })
-  }
+    return await axios.post(
+      'https://api.cloudinary.com/v1_1/mydouglasproject/upload',
+      formData
+    );
+  };
 
   return (
     <>
@@ -65,9 +74,9 @@ function SettingProfile() {
 
           <div className='mt-8 space-y-6'>
             <SettingAvatar setImgFile={setImgFile} />
-            <SettingLevel setLevel={setLevel} />
-            <SettingBday setBirthday={setBirthday} />
-            <SettingBio setBio={setBio} />
+            <SettingLevel level={level} setLevel={setLevel} />
+            <SettingBday birthday={birthday} setBirthday={setBirthday} />
+            <SettingBio bio={bio} setBio={setBio} />
 
             <div>
               <button
@@ -83,7 +92,7 @@ function SettingProfile() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default SettingProfile
+export default SettingProfile;
