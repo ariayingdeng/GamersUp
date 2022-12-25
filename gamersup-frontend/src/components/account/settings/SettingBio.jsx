@@ -1,7 +1,13 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 
 function SettingBio({ bio, setBio }) {
-  const [text, setText] = useState(bio);
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    if (bio !== null) {
+      setText(bio);
+    }
+  }, []);
 
   const handleTextChange = (e) => {
     setText(e.target.value);

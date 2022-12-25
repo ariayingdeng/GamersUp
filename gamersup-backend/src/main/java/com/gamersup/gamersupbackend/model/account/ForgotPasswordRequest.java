@@ -9,6 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ResetPasswordRequest {
+public class ForgotPasswordRequest {
     private String email;
 }

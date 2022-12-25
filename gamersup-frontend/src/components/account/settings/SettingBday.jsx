@@ -4,14 +4,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 function SettingBday({ birthday, setBirthday }) {
 
-  const [newBirthday, setNewBirthDay] = useState();
+  const [newBirthday, setNewBirthDay] = useState(new Date());
 
   useEffect(() => {
-    if (birthday === null) {
-      setNewBirthDay(new Date());
-    } else {
+    if (birthday !== null) {
       setNewBirthDay(new Date(birthday));
-    }
+    } 
   }, []);
 
   const handleChangeBd = (newDate) => {

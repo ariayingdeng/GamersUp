@@ -51,18 +51,26 @@ public class AccountApi {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest request) throws Exception {
+    public ResponseEntity<Boolean> createAuthenticationToken(@RequestBody LoginRequest request) throws Exception{
+//        User user = userService.getUserByEmail(request.getEmail());
+//        if (userService.checkPassword(user, request.getPassword())) {
+//            return new ResponseEntity<>(true, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+//        }
+
         try {
             customAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                     request.getPassword()));
+            return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (BadCredentialsException ex) {
-            throw new Exception("Incorrect email or password", ex);
+            throw ex;
         }
 
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getEmail());
+//        UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getEmail());
 //        final String jwt = jwtUsernameAndPasswordAuthenticationFilter.generateToken(userDetails);
-        String jwt = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzODZkMTU1ZjhlYmE0Y2YxOTliNWI5YiIsImlhdCI6MTY3MDMwMDQ4MCwiZXhwIjoxNjcwMzAyMjgwfQ.V-4XkUivSNx8jEVVxN8zyEgk8zokmbt5J3Wm1hyc_tW0TBkisxvex8yIvXr29v0bcKk9RPovu7kJT9vD1yibYcPKsvQIFcO8zY8bnL5rt0r6Vffc3HqRqjaXskF_UvRa59aWDG_QFe8hT8-NLkKAUYy0jZJhzA7fMecWbKHj3Zkpfl7yMCRbve7BYnuy5hQN4tBsz_pZazdikdAQ33KD5GZc3ZsqPtdjDHtD_T_xA3LLF1oWoWa-Y9HV09Bj4O8uYNwKH5N1mUJtQD1R-UWpdRNZ8gad5Z3UVgkFBry2Ka-Y8s-uEJmsRGfy6rLoGTzm4ceDnGjGjiBZWt9oZmojqMXPtOEcpwCpsjdaydYjEoCfmDbNZjxWemR9V5am4YTEDtisaTqt3imzH5rp4plCseHYCkrw4Hd0uFltyvyLpVKrtmvtkHMPoqyQyNlM_C8mxizAOA5ZumqeZ9Drq_1yCNYu7NtnpqIv36E_HC6yieQgCV9s3UiIokHev4Dn5eo2s-Z0nBJf2n0qPIVIPD2fHy5FAN7L8YQR5F_ahLcKUP2uW4OFyZyIW8Why-iieY9N864ZKO0LapbtFb2xLcBWyZYe4J13CnyZY3uO4sYm4IfLG4NLrw7aHMXgCNutJnHoIpV6ILp-9c0j9u-SaZMoOd_wmIEyGwYCQRN1WncPzys";
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+//        String jwt = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzODZkMTU1ZjhlYmE0Y2YxOTliNWI5YiIsImlhdCI6MTY3MDMwMDQ4MCwiZXhwIjoxNjcwMzAyMjgwfQ.V-4XkUivSNx8jEVVxN8zyEgk8zokmbt5J3Wm1hyc_tW0TBkisxvex8yIvXr29v0bcKk9RPovu7kJT9vD1yibYcPKsvQIFcO8zY8bnL5rt0r6Vffc3HqRqjaXskF_UvRa59aWDG_QFe8hT8-NLkKAUYy0jZJhzA7fMecWbKHj3Zkpfl7yMCRbve7BYnuy5hQN4tBsz_pZazdikdAQ33KD5GZc3ZsqPtdjDHtD_T_xA3LLF1oWoWa-Y9HV09Bj4O8uYNwKH5N1mUJtQD1R-UWpdRNZ8gad5Z3UVgkFBry2Ka-Y8s-uEJmsRGfy6rLoGTzm4ceDnGjGjiBZWt9oZmojqMXPtOEcpwCpsjdaydYjEoCfmDbNZjxWemR9V5am4YTEDtisaTqt3imzH5rp4plCseHYCkrw4Hd0uFltyvyLpVKrtmvtkHMPoqyQyNlM_C8mxizAOA5ZumqeZ9Drq_1yCNYu7NtnpqIv36E_HC6yieQgCV9s3UiIokHev4Dn5eo2s-Z0nBJf2n0qPIVIPD2fHy5FAN7L8YQR5F_ahLcKUP2uW4OFyZyIW8Why-iieY9N864ZKO0LapbtFb2xLcBWyZYe4J13CnyZY3uO4sYm4IfLG4NLrw7aHMXgCNutJnHoIpV6ILp-9c0j9u-SaZMoOd_wmIEyGwYCQRN1WncPzys";
+//        return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
     @PostMapping("/login/google")
@@ -83,14 +91,17 @@ public class AccountApi {
     }
 
     // reset password
-    @PostMapping("/reset_password")
-    public String resetPasswordProgress(@RequestBody ResetPasswordRequest request) {
+    @PostMapping("/forgot_password")
+    public String forgotPasswordProgress(@RequestBody ForgotPasswordRequest request) {
         return resetPasswordService.resetPassword(request);
     }
 
-    @PutMapping("/change_password")
-    public String changePassword(@RequestBody ChangePasswordRequest request) {
-        return resetPasswordService.changePassword(request);
+    @PutMapping("/change/password")
+    public ResponseEntity<Boolean> changePasswordWithCurrentPassword(@RequestBody ChangePasswordWithCurrentPassRequest request) {
+        if (resetPasswordService.changePassword(request)) {
+            return  new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
 

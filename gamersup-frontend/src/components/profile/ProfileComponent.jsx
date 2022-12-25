@@ -61,8 +61,8 @@ function ProfileComponent({ gamer }) {
       {/* Avatar part */}
       <div className='grid grid-cols-[2fr_3fr] gap-4'>
         <div id='left'>
-          <div className='justify-center flex '>
-            <h1 className='text-neutral-content py-2 text-4xl shadow-inner shadow-black bg-secondary-focus px-4 rounded-[16px] mt-2'>
+          <div className='justify-center flex'>
+            <h1 className='text-neutral-content py-2 text-4xl shadow-inner shadow-black bg-base-100 px-4 rounded-[16px] mt-2'>
               {name}
             </h1>
           </div>
@@ -107,10 +107,10 @@ function ProfileComponent({ gamer }) {
           {id !== user.id && !friend && (
             <div className='flex justify-center'>
               <button
-                className='rounded-full bg-primary px-10 '
+                className='rounded-full bg-primary px-6 py-2 flex justify-center hover:bg-primary-focus'
                 onClick={askForFriend}
               >
-                Become Friend
+                <span className='material-symbols-outlined mr-2'>group_add</span> <strong>Add friend</strong>
               </button>
             </div>
           )}

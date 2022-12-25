@@ -30,19 +30,19 @@ export const UserProvider = ({ children }) => {
   };
 
   // Execute back end authentication service for login feature
-  const executeAuthenticationService = (email, password) => {
-    return axios.post(`${API_URL}/account/authenticate`, {
+  const executeAuthenticationService = async (email, password) => {
+    return await axios.post(`${API_URL}/account/authenticate`, {
       email,
       password,
     });
   };
 
   // Execute Google login authentication
-  const executeGoogleAuthService = (name, email, avatarUrl) => {
+  const executeGoogleAuthService = async (name, email, avatarUrl) => {
     // return axios.get(`${API_URL}/oauth2/client/google`, {
     //   withCredentials: true,
     // });
-    return axios.post(`${API_URL}/account/login/google`, {
+    return await axios.post(`${API_URL}/account/login/google`, {
       name,
       email,
       avatarUrl,
@@ -330,10 +330,11 @@ export const UserProvider = ({ children }) => {
     return axios.get(`${API_URL}/recommendations/hasratings/user=${userId}`);
   };
 
-  const changePassword = (userId, password) => {
-    return axios.put(`${API_URL}/account/change_password`, {
+  const changePassword = (userId, currentPassword, newPassword) => {
+    return axios.put(`${API_URL}/account/change/password`, {
       userId,
-      password,
+      currentPassword,
+      newPassword,
     });
   };
 
