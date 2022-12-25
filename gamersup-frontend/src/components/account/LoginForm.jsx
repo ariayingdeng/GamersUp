@@ -20,7 +20,6 @@ function LoginForm() {
   const { setAlertWithTimeout } = useContext(AlertContext);
 
   const {
-    user,
     isLoggedIn,
     executeAuthenticationService,
     getUserInfoByEmail,
@@ -31,8 +30,8 @@ function LoginForm() {
   // const REGISTER_SESSION = process.env.REACT_APP_REGISTER_SESSION
 
   useEffect(() => {
-    if (isLoggedIn && user.level === null) {
-      navigate('/settings', { replace: true });
+    if (isLoggedIn()) {
+      navigate('/', { replace: true });
     }
   }, [isLoggedIn]);
 
@@ -46,11 +45,11 @@ function LoginForm() {
       })
       .catch((err) => {
         if (err.response) {
-          setAlertWithTimeout(err.response.data.error, 'error');
+          setAlertWithTimeout(err.response.data.error, 'Invalid credentials.');
         } else if (err.request) {
-          setAlertWithTimeout(err.request, 'error');
+          setAlertWithTimeout(err.request, 'Please try again later.');
         } else {
-          setAlertWithTimeout(err.message, 'error');
+          setAlertWithTimeout(err.message, 'Please try again later.');
         }
       });
   };

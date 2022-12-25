@@ -16,11 +16,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("api/account")
 @AllArgsConstructor
-@CrossOrigin(origins="http://localhost:5365")
+@CrossOrigin(origins="http://localhost:5252")
 public class AccountApi {
 
     @Autowired
@@ -44,10 +45,9 @@ public class AccountApi {
     }
 
     @GetMapping(path = "/confirm")
-    public boolean confirm(@RequestParam("token") String token) {
-        boolean result =  registrationService.confirmToken(token);
-//        return new RedirectView("http://localhost:4200/login");
-        return result;
+    public RedirectView confirm(@RequestParam("token") String token) {
+        registrationService.confirmToken(token);
+        return new RedirectView("http://localhost:5252/login");
     }
 
     @PostMapping("/authenticate")

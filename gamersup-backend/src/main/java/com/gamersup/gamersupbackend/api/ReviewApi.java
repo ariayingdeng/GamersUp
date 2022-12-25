@@ -16,7 +16,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/reviews")
 @AllArgsConstructor
-@CrossOrigin(origins="http://localhost:5365")
+@CrossOrigin(origins="http://localhost:5252")
 public class ReviewApi {
     private ReviewService reviewService;
 

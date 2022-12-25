@@ -1,35 +1,35 @@
-import { React, useContext, useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import UserContext from '../../context/user/UserContext'
-import GamesContext from '../../context/games/GamesContext'
-import gamerAvatar from '../../images/gamers-logo.png'
-import FriendList from './FriendList'
+import { React, useContext, useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import UserContext from '../../context/user/UserContext';
+import GamesContext from '../../context/games/GamesContext';
+import gamerAvatar from '../../images/gamers-logo.png';
+import FriendList from './FriendList';
 
 function Navbar({ title }) {
   const { isLoggedIn, logout, getLoggedUserInSession, user } =
-    useContext(UserContext)
-  const { searchGames } = useContext(GamesContext)
-  const [text, setText] = useState('')
+    useContext(UserContext);
+  const { searchGames } = useContext(GamesContext);
+  const [text, setText] = useState('');
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isLoggedIn()) {
       // get the logged user
-      getLoggedUserInSession()
+      getLoggedUserInSession();
     }
-  }, [])
+  }, []);
 
-  const handleChange = (e) => setText(e.target.value)
+  const handleChange = (e) => setText(e.target.value);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     //search games
-    searchGames(text)
-    navigate('/', { replace: true })
-  }
+    searchGames(text);
+    navigate('/', { replace: true });
+  };
 
   return (
     <nav className='navbar shadow-lg bg-base-300'>
@@ -59,40 +59,22 @@ function Navbar({ title }) {
               </Link>
             )}
             {isLoggedIn() && (
-              <div className='w-12 rounded-full mt-2 ml-3'>
-                <button className='btn btn-ghost btn-circle'>
-                  <Link
-                    to={`/recommendations/${
-                      JSON.parse(sessionStorage.getItem('user')).id
-                    }`}
-                    className='indicator'
-                  >
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      className='h-6 w-6'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke='currentColor'
-                      strokeWidth='2'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        d='M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
-                      />
-                    </svg>
-                    <span className='badge badge-xs badge-error indicator-item'></span>
-                  </Link>
-                </button>
-              </div>
+              <Link
+                to={`/recommendations/${
+                  JSON.parse(sessionStorage.getItem('user')).id
+                }`}
+                className='btn btn-ghost btn-lg rounded-btn ml-3'
+              >
+                Recommendations
+              </Link>
             )}
             {isLoggedIn() && (
               <div className='dropdown dropdown-end'>
                 <label
                   tabIndex='0'
-                  className='btn btn-ghost btn-lg rounded-btn'
+                  className='btn btn-ghost btn-lg btn-circle'
                 >
-                  Friends
+                  <span className='material-symbols-outlined'>group</span>
                 </label>
                 <ul
                   tabIndex='0'
@@ -103,12 +85,12 @@ function Navbar({ title }) {
               </div>
             )}
             {isLoggedIn() && (
-              <div className='w-12 rounded-full mt-2 mr-3'>
+              <div className='w-12 rounded-full mt-2 mr-5 ml-1'>
                 <button className='btn btn-ghost btn-circle'>
                   <Link to='/chatRoom' className='indicator'>
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
-                      className='h-6 w-6'
+                      className='h-7 w-7'
                       fill='none'
                       viewBox='0 0 24 24'
                       stroke='currentColor'
@@ -120,6 +102,7 @@ function Navbar({ title }) {
                         d='M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z'
                       />
                     </svg>
+                    {/*<span className='badge badge-xs badge-error indicator-item'></span>*/}
                   </Link>
                 </button>
               </div>
@@ -159,7 +142,7 @@ function Navbar({ title }) {
                     <Link to='/resetpassword' className='text-lg'>
                       Reset Password
                     </Link>
-                  </li>                        
+                  </li>
                   <li>
                     <div className='text-lg' onClick={logout}>
                       Logout
@@ -172,15 +155,15 @@ function Navbar({ title }) {
         </div>
       </div>
     </nav>
-  )
+  );
 }
 
 Navbar.defaultProps = {
   title: 'Gamers Up',
-}
+};
 
 Navbar.propTypes = {
   title: PropTypes.string,
-}
+};
 
-export default Navbar
+export default Navbar;

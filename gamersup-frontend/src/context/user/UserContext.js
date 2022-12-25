@@ -193,7 +193,6 @@ export const UserProvider = ({ children }) => {
         bio,
       })
       .then((response) => {
-        console.log(response.data);
         getUserInfoByEmail(state.user.email);
       })
       .catch((err) => {
@@ -206,13 +205,12 @@ export const UserProvider = ({ children }) => {
 
   const changeAvatar = async (url) => {
     const userId = state.user.id;
-    axios
+    await axios
       .put(`${API_URL}/gamerinfo/changeAvatar`, {
         userId,
         url,
       })
       .then((response) => {
-        console.log(response);
         getUserInfoByEmail(state.user.email);
       })
       .catch((err) => {
@@ -223,29 +221,29 @@ export const UserProvider = ({ children }) => {
       });
   };
 
-  const changeBirthday = (dob) => {
+  const changeBirthday = async (dob) => {
     const userId = state.user.id;
-    return axios.put(`${API_URL}/gamerinfo/changeBirthday`, {
+    return await axios.put(`${API_URL}/gamerinfo/changeBirthday`, {
       userId,
       dob,
     });
   };
 
-  const changeLevel = (level) => {
+  const changeLevel = async (level) => {
     const userId = state.user.id;
-    return axios.put(`${API_URL}/gamerinfo/changeLevel`, {
+    return await axios.put(`${API_URL}/gamerinfo/changeLevel`, {
       userId,
       level,
     });
   };
 
-  const changeLikes = (gamerId) => {
-    return axios.put(`${API_URL}/gamerinfo/changeLikes/${gamerId}`);
+  const changeLikes = async (gamerId) => {
+    return await axios.put(`${API_URL}/gamerinfo/changeLikes/${gamerId}`);
   };
 
-  const getFriends = () => {
+  const getFriends = async () => {
     const userId = state.user.id;
-    return axios.get(`${API_URL}/gamerinfo/friends/${userId}`);
+    return await axios.get(`${API_URL}/gamerinfo/friends/${userId}`);
   };
 
   /* add a game review with rating 5 when the user clicks love for a game */

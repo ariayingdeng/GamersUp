@@ -97,8 +97,7 @@ function ProfileComponent({ gamer }) {
                 className='rounded-full bg-primary px-10 '
                 onClick={uploadAvatar}
               >
-                {' '}
-                Upload{' '}
+                Upload
               </button>
             </div>
           )}
@@ -120,7 +119,7 @@ function ProfileComponent({ gamer }) {
         <div id='right' className='bg-neutral px-10 pt-2 '>
           <div className='justify-center flex '>
             <h1 className='text-neutral-content py-2 text-4xl  px-4 rounded-[16px] mb-4'>
-              Details
+              Profile
             </h1>
           </div>
           <div id='detailInnerGrid' className='grid grid-cols-2 gap-4'>
@@ -128,9 +127,8 @@ function ProfileComponent({ gamer }) {
               <h2 className='inline-flex text-accent-focus py-1 text-xl'>
                 Email:
               </h2>
-              <h2 className='inline-flex text-neutral-content py-1 text-3xl'>
-                {' '}
-                &nbsp;&nbsp;{email}
+              <h2 className='inline-flex text-neutral-content py-1 text-2xl'>
+                &nbsp;{email}
               </h2>
             </div>
             <UserBirthday gamerId={id} dob={dob} />
