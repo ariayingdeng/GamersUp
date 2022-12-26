@@ -23,7 +23,7 @@ function ProfileComponent({ gamer }) {
 
   const uploadAvatar = async () => {
     if (imageSelected === '') {
-      setAlertWithTimeout('Please select an avatar!! ', 'information');
+      setAlertWithTimeout('Please select an avatar!!', 'information');
     } else {
       const formData = new FormData();
       formData.append('file', imageSelected);

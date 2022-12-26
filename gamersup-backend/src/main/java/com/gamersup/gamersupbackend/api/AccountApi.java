@@ -2,19 +2,13 @@ package com.gamersup.gamersupbackend.api;
 
 import com.gamersup.gamersupbackend.model.account.*;
 import com.gamersup.gamersupbackend.model.profile.GamerInfo;
-import com.gamersup.gamersupbackend.security.jwt.model.AuthenticationResponse;
-import com.gamersup.gamersupbackend.service.*;
-import com.gamersup.gamersupbackend.service.account_service.CustomAuthenticationProvider;
-import com.gamersup.gamersupbackend.service.account_service.CustomUserDetailsService;
-import com.gamersup.gamersupbackend.service.account_service.UserService;
-import com.gamersup.gamersupbackend.service.account_service.RegistrationService;
+import com.gamersup.gamersupbackend.service.account_service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -91,9 +85,9 @@ public class AccountApi {
     }
 
     // reset password
-    @PostMapping("/forgot_password")
-    public String forgotPasswordProgress(@RequestBody ForgotPasswordRequest request) {
-        return resetPasswordService.resetPassword(request);
+    @PostMapping("/forgot/password")
+    public Boolean forgotPasswordProgress(@RequestBody ForgotPasswordRequest request) {
+        return resetPasswordService.sendForgotPasswordEmail(request);
     }
 
     @PutMapping("/change/password")
