@@ -5,23 +5,23 @@ import AlertContext from '../../context/alert/AlertContext'
 const API_URL = process.env.REACT_APP_BACKEND_API_URL
 
 function ForgotPassword() {
-  const { setAlert } = useContext(AlertContext)
+  const { setAlertWithTimeout } = useContext(AlertContext)
 
-  const resetPassword = (e) => {
+  const forgotPasswordRequest = (e) => {
     e.preventDefault()
     axios
-      .post(`${API_URL}/account/reset_password`, {
+      .post(`${API_URL}/account/forgot/password`, {
         email: e.target.email.value,
       })
       .then((response) => {
         console.log(response)
-        setAlert(
+        setAlertWithTimeout(
           'Please check your email inbox for your new password.',
           'information'
         )
       })
       .catch((err) => {
-        setAlert('The email address does not exist.', 'error')
+        setAlertWithTimeout('The email address does not exist.', 'error')
       })
   }
 
@@ -34,7 +34,7 @@ function ForgotPassword() {
               Password Reset Request
             </h2>
           </div>
-          <form className='mt-8 space-y-6' onSubmit={resetPassword}>
+          <form className='mt-8 space-y-6' onSubmit={forgotPasswordRequest}>
             <div className='rounded-md shadow-sm space-y-px'>
               <div>
                 <label

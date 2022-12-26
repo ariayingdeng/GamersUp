@@ -57,27 +57,6 @@ public class GamerService {
         );
     }
 
-//    public GamerProfile getGamerProfileById(long id) {
-//        Optional<GamerInfo> gamer = gamerRepository.findById(id);
-//        return getGamerProfile(gamer);
-//    }
-//
-//    public GamerProfile getGamerProfileByEmail(String email) {
-//        Optional<GamerInfo> gamer = gamerRepository.findByEmail(email);
-//        return getGamerProfile(gamer);
-//    }
-//
-//    private GamerProfile getGamerProfile(Optional<GamerInfo> gamer) {
-//        if (gamer.isPresent()) {
-//            GamerInfo gamerInfo = gamer.get();
-//            GamerProfile result = new GamerProfile(gamerInfo.getId(), gamerInfo.getName(), gamerInfo.getEmail(),
-//                    gamerInfo.getDob(), gamerInfo.getAvatarUrl(), gamerInfo.getBio(), gamerInfo.getLevel(), gamerInfo.getLikes());
-//            return result;
-//        } else {
-//            throw new ResourceNotFoundException("Gamer", "gamer", gamer);
-//        }
-//    }
-
     public GamerInfo updateGamerInfo(GamerSettingsRequest settingsRequest) {
         GamerInfo updatedGamer = gamerRepository.findById(settingsRequest.getUserId()).orElseThrow(() ->
                 new ResourceNotFoundException("Gamer", "Id", settingsRequest.getUserId()));
@@ -102,25 +81,6 @@ public class GamerService {
 //        }
 //        return false;
 //    }
-
-//    @Override
-//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        return gamerRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Gamer", "email", email));
-//    }
-
-//    public int enableGamer(String email) {
-//        return gamerRepository.enableGamer(email);
-//    }
-
-
-
-    public void updatePassword(GamerInfo gamer, String newPassword) {
-        String encodedPassword = passwordEncoder.encode(newPassword);
-//        gamer.setPassword(encodedPassword);
-
-        gamerRepository.save(gamer);
-
-    }
 
 //    public GamerInfo getGamerByEmail(String email) {
 //        return gamerRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("email", "gamer", email));

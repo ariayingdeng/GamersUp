@@ -1,4 +1,4 @@
-package com.gamersup.gamersupbackend.service;
+package com.gamersup.gamersupbackend.service.account_service;
 
 import com.gamersup.gamersupbackend.model.account.ChangePasswordWithCurrentPassRequest;
 import com.gamersup.gamersupbackend.model.account.ForgotPasswordRequest;
@@ -7,8 +7,6 @@ import com.gamersup.gamersupbackend.service.account_service.UserService;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailSender;
 import com.gamersup.gamersupbackend.service.email_service.email.EmailValidatorService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Random;
 
@@ -19,19 +17,16 @@ public record ResetPasswordService(UserService userService,
 
                                    EmailSender emailSender) {
 
-    public String resetPassword(ForgotPasswordRequest request) {
+    public Boolean sendForgotPasswordEmail(ForgotPasswordRequest request) {
         if (!emailValidator.test(request.getEmail())) {
-            return "Invalid email";
+            return false;
         }
         System.out.println(request.getEmail());
         User user = userService.getUserByEmail(request.getEmail());
         String newPassword = generateRandomPassword();
         userService.updatePassword(user, newPassword);
-
-        emailSender.send(request.getEmail(),
-                buildEmail(user.getName(), newPassword));
-
-        return "successful";
+        emailSender.send(request.getEmail(), buildEmail(user.getName(), newPassword));
+        return true;
     }
 
     public boolean changePassword(ChangePasswordWithCurrentPassRequest request) {
@@ -113,7 +108,7 @@ public record ResetPasswordService(UserService userService,
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
                 "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Your new password is " + newPassword + " </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
-                "        \n" + "<a href=\"" + "http://localhost:4200/login" + "\">Go to Login</a>" +
+                "        \n" + "<a href=\"" + "http://localhost:5252/login" + "\">Go to Login</a>" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n"  +
                 "    </tr>\n" +
