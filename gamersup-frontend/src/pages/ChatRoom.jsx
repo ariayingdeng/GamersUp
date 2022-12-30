@@ -1,79 +1,124 @@
-import { useEffect, useRef, useState } from 'react'
-import socketIOClient from 'socket.io-client'
-import FriendComponent from '../components/account/FriendComponent'
+import { useEffect, useRef, useState } from 'react';
+import socketIOClient from 'socket.io-client';
+import FriendComponent from '../components/account/FriendComponent';
 
-const ws = socketIOClient('http://localhost:3000')
-const useMountEffect = (fun) => useEffect(fun, [])
+const ws = socketIOClient('http://localhost:3000');
+// const useMountEffect = (fun) => useEffect(fun, [])
 
 function ChatRoom() {
-  const scrollRef = useRef(null)
-  const [userList, setUserList] = useState([])
-  const user = JSON.parse(sessionStorage.getItem('user'))
+  const scrollRef = useRef(null);
+  const [userList, setUserList] = useState([]);
+  const user = JSON.parse(sessionStorage.getItem('user'));
 
-  useMountEffect(() => {
-    ws.off('join_user').on('joined_user', (data) => {
+  // useMountEffect(() => {
+  // ws.off('join_user').on('joined_user', (data) => {
+  //   if (data !== null && data.id > 0) {
+  //     getMessage(data, 'join')
+  //   }
+  //   // })
+  //   ws.on('joined_user', (data) => {
+  //     if (data !== null && data.id > 0) {
+  //       getMessage(data, 'join')
+  //     }
+  //   })
+  //   ws.on('message', (data) => {
+  //     getMessage(data, 'message')
+  //   })
+  //   ws.on('left', (data) => {
+  //     getMessage(data, 'left')
+  //   })
+  //   ws.on('user-list', (data) => {
+  //     if (data !== null) setUserList(data)
+  //   })
+
+  //   return () => {
+  //     ws.off('joined_user')
+  //     ws.off('message')
+  //     ws.off('left')
+  //     ws.off('user-list')
+  //   }
+  // }, [])
+
+  useEffect(() => {
+    ws.on('joined_user', (data) => {
       if (data !== null && data.id > 0) {
-        getMessage(data, 'join')
+        getMessage(data, 'join');
       }
-    })
+    });
     ws.on('message', (data) => {
-      getMessage(data, 'message')
-    })
+      getMessage(data, 'message');
+    });
     ws.on('left', (data) => {
-      getMessage(data, 'left')
-    })
+      getMessage(data, 'left');
+    });
     ws.on('user-list', (data) => {
-      if (data !== null) setUserList(data)
-    })
+      if (data !== null) setUserList(data);
+    });
+
     return () => {
-      ws.off('joined_user')
-      ws.off('message')
-      ws.off('left')
-      ws.off('user-list')
-    }
-  }, [])
+      ws.off('joined_user');
+      ws.off('message');
+      ws.off('left');
+      ws.off('user-list');
+    };
+  }, []);
 
   useEffect(() => {
     if (user !== null) {
-      ws.emit('join', user)
+      ws.emit('join', user);
     }
-  }, [ws])
+
+    return () => {
+      ws.off('joined');
+    };
+  }, [ws]);
+
+  // Update the userList
+  // useEffect(() => {
+  //   ws.on('user-list', (data) => {
+  //     if (data !== null) setUserList(data);
+  //   });
+
+  //   return () => {
+  //     ws.off('user-list');
+  //   };
+  // }, [ws]);
 
   const getMessage = (data, type) => {
-    let messageBox = document.querySelector('.message')
-    var scrollHeight = messageBox.scrollHeight
-    let messageContainer = document.createElement('div')
+    let messageBox = document.querySelector('.message');
+    var scrollHeight = messageBox.scrollHeight;
+    let messageContainer = document.createElement('div');
     switch (type) {
       case 'message':
-        messageContainer.innerText = data.name + ': ' + data.message
-        break
+        messageContainer.innerText = data.name + ': ' + data.message;
+        break;
       case 'join':
-        messageContainer.innerText = data.name + ' joined the room'
-        break
+        messageContainer.innerText = data.name + ' joined the room';
+        break;
       case 'left':
-        messageContainer.innerText = data.name + ' left the room'
-        break
+        messageContainer.innerText = data.name + ' left the room';
+        break;
       default:
-        break
+        break;
     }
-    messageContainer.classList.add('text-left')
-    messageContainer.classList.add('m-2')
-    messageBox.appendChild(messageContainer)
+    messageContainer.classList.add('text-left');
+    messageContainer.classList.add('m-2');
+    messageBox.appendChild(messageContainer);
     scrollRef.current.scrollTo({
       behavior: 'smooth',
       top: scrollHeight,
-    })
-  }
+    });
+  };
 
   const sendMessage = (e) => {
-    if (document.querySelector('.messageInput').value === '') return
-    const message = document.querySelector('.messageInput').value
-    document.querySelector('.messageInput').value = ''
+    if (document.querySelector('.messageInput').value === '') return;
+    const message = document.querySelector('.messageInput').value;
+    document.querySelector('.messageInput').value = '';
     ws.emit('sendMessage', {
       name: user.name,
       message: message,
-    })
-  }
+    });
+  };
 
   return (
     <div className='grid grid-cols-5 gap-5 my-5 mr-5'>
@@ -96,7 +141,7 @@ function ChatRoom() {
             placeholder='Type your message here'
             style={{ width: '85%' }}
             onKeyUp={(e) => {
-              if (e.key === 'Enter') sendMessage()
+              if (e.key === 'Enter') sendMessage();
             }}
           />
           <button
@@ -130,7 +175,7 @@ function ChatRoom() {
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
-export default ChatRoom
+export default ChatRoom;

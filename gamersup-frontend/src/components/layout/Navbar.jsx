@@ -1,18 +1,17 @@
-import { React, useContext, useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { React, useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import UserContext from '../../context/user/UserContext';
-import GamesContext from '../../context/games/GamesContext';
-import gamerAvatar from '../../images/gamers-logo.png';
-import FriendList from './FriendList';
+import Notifications from './nav/Notifications';
+import SearchBar from './nav/SearchBar';
+import SignInButton from './nav/SignInButton';
+import Recommendations from './nav/Recommendations';
+import Friends from './nav/Friends';
+import Chat from './nav/Chat';
+import Avatar from './nav/Avatar';
 
 function Navbar({ title }) {
-  const { isLoggedIn, logout, getLoggedUserInSession, user } =
-    useContext(UserContext);
-  const { searchGames } = useContext(GamesContext);
-  const [text, setText] = useState('');
-
-  const navigate = useNavigate();
+  const { isLoggedIn, getLoggedUserInSession } = useContext(UserContext);
 
   useEffect(() => {
     if (isLoggedIn()) {
@@ -20,16 +19,6 @@ function Navbar({ title }) {
       getLoggedUserInSession();
     }
   }, []);
-
-  const handleChange = (e) => setText(e.target.value);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    //search games
-    searchGames(text);
-    navigate('/', { replace: true });
-  };
 
   return (
     <nav className='navbar shadow-lg bg-base-300'>
@@ -41,115 +30,16 @@ function Navbar({ title }) {
         </div>
         <div className='flex-1 px-2 mx-2 text-neutral-content'>
           <div className='flex justify-end'>
-            <form className='form-control' onSubmit={handleSubmit}>
-              <input
-                type='text'
-                className='w-full pr-10 mt-2 bg-base-100 text-lg input input-bordered'
-                placeholder='Search for games...'
-                value={text}
-                onChange={handleChange}
-              />
-            </form>
-            {!isLoggedIn() && (
-              <Link
-                to='/login'
-                className='btn btn-ghost btn-lg rounded-btn ml-3'
-              >
-                Sign In
-              </Link>
-            )}
+            <SearchBar />
+            {!isLoggedIn() && <SignInButton />}
             {isLoggedIn() && (
-              <Link
-                to={`/recommendations/${
-                  JSON.parse(sessionStorage.getItem('user')).id
-                }`}
-                className='btn btn-ghost btn-lg rounded-btn ml-3'
-              >
-                Recommendations
-              </Link>
-            )}
-            {isLoggedIn() && (
-              <div className='dropdown dropdown-end'>
-                <label
-                  tabIndex='0'
-                  className='btn btn-ghost btn-lg btn-circle'
-                >
-                  <span className='material-symbols-outlined'>group</span>
-                </label>
-                <ul
-                  tabIndex='0'
-                  className='mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-200 rounded-box w-60'
-                >
-                  <FriendList />
-                </ul>
-              </div>
-            )}
-            {isLoggedIn() && (
-              <div className='w-12 rounded-full mt-2 mr-5 ml-1'>
-                <button className='btn btn-ghost btn-circle'>
-                  <Link to='/chatRoom' className='indicator'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      className='h-7 w-7'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke='currentColor'
-                      strokeWidth='2'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        d='M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z'
-                      />
-                    </svg>
-                    {/*<span className='badge badge-xs badge-error indicator-item'></span>*/}
-                  </Link>
-                </button>
-              </div>
-            )}
-            {isLoggedIn() && (
-              <div className='dropdown dropdown-end'>
-                <label tabIndex='0' className='btn btn-ghost btn-circle avatar'>
-                  <div className='w-12 rounded-full mt-2'>
-                    {user.avatarUrl !== null && (
-                      <img src={user.avatarUrl} alt='avatar' />
-                    )}
-                    {user.avatarUrl === null && (
-                      <img src={gamerAvatar} alt='avatar' />
-                    )}
-                  </div>
-                </label>
-                <ul
-                  tabIndex='0'
-                  className='mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-200 rounded-box w-44'
-                >
-                  <li>
-                    <Link
-                      to={`/profile/${
-                        JSON.parse(sessionStorage.getItem('user')).id
-                      }`}
-                      className='text-lg'
-                    >
-                      Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to='/settings' className='text-lg'>
-                      Settings
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to='/resetpassword' className='text-lg'>
-                      Reset Password
-                    </Link>
-                  </li>
-                  <li>
-                    <div className='text-lg' onClick={logout}>
-                      Logout
-                    </div>
-                  </li>
-                </ul>
-              </div>
+              <>
+                <Recommendations />
+                <Friends />
+                <Notifications />
+                <Chat />
+                <Avatar />
+              </>
             )}
           </div>
         </div>
