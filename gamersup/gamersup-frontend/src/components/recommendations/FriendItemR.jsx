@@ -38,6 +38,11 @@ function FriendItemR({ userID, gamerID, socket }) {
   const handleAdd = async (e) => {
     e.preventDefault();
     if (isLoggedIn()) {
+      socket?.emit('sendNotification', {
+        senderId: userID,
+        receiverId: gamerID,
+        type: 2,
+      });
       await addFriend(userID, gamerID);
     }
   };

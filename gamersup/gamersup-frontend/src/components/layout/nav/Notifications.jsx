@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 import gamerAvatar from '../../../images/gamers-logo.png';
 
 function Notifications({ socket }) {
-  const { getGamerById } = useContext(UserContext);
+  const { user, getGamerById, acceptFriendWithUI } = useContext(UserContext);
 
   const [notifications, setNotifications] = useState([]);
   const [contents, setContents] = useState([]); // content of the notifications: id, avatarUrl, message
+  const [accept, setAccept] = useState(false);
 
   useEffect(() => {
     socket?.on('getNotification', (data) => {
@@ -24,10 +25,9 @@ function Notifications({ socket }) {
       getGamerById(senderId)
         .then((response) => {
           const gamer = response.data;
-          console.log('gamer', gamer);
           const { id, avatarUrl, name } = gamer;
           const message = getNotificationMessage(name, type);
-          setContents((prev) => [...prev, { id, avatarUrl, message }]);
+          setContents((prev) => [{ id, avatarUrl, message, type }, ...prev]);
         })
         .catch((error) => console.log(error));
     }
@@ -39,30 +39,56 @@ function Notifications({ socket }) {
       case 1:
         content += ' liked your profile.';
         break;
+      case 2:
+        content += ' sent you a friend request.';
+        break;
+      case 3:
+        content += ' and you became friends!';
+        break;
     }
     return content;
   };
 
   const disPlayNotification = (content, index) => {
     return (
-      <li key={index} className='w-72 rounded-box bg-base-300 my-1'>
-        <Link to={'/profile/' + content.id} className='rounded-box'>
-          {content.avatarUrl === null && (
-            <img
-              src={gamerAvatar}
-              alt='avatar'
-              className='w-8 rounded-full avatar'
-            />
-          )}
-          {content.avatarUrl !== null && (
-            <img
-              src={content.avatarUrl}
-              alt='avatar'
-              className='w-8 rounded-full avatar'
-            />
-          )}
-          <div className='my-auto text-base'>{content.message}</div>
-        </Link>
+      <li key={index} className='w-80 rounded-box bg-base-300 my-1'>
+        <div className='grid grid-cols-6 gap-1'>
+          <Link to={'/profile/' + content.id} className='rounded-box'>
+            {content.avatarUrl === null && (
+              <img
+                src={gamerAvatar}
+                alt='avatar'
+                className='w-8 rounded-full avatar'
+              />
+            )}
+            {content.avatarUrl !== null && (
+              <img
+                src={content.avatarUrl}
+                alt='avatar'
+                className='w-8 rounded-full avatar'
+              />
+            )}
+          </Link>
+          <div className='my-auto text-base col-span-5 flex justify-between'>
+            <Link to={'/profile/' + content.id}>{content.message}</Link>
+            {content.type === 2 && accept === false && (
+              <button
+                className='btn-primary w-24 h-9 my-auto font-medium rounded-lg text-xs hover:bg-primary-focus'
+                onClick={() => handleAccept(user.id, content.id)}
+              >
+                ACCEPT
+              </button>
+            )}
+            {content.type === 2 && accept === true && (
+              <button
+                className='bg-neutral-focus w-24 h-9 my-auto font-medium rounded-lg text-xs'
+                disabled
+              >
+                ACCEPTED
+              </button>
+            )}
+          </div>
+        </div>
       </li>
     );
   };
@@ -70,6 +96,21 @@ function Notifications({ socket }) {
   const handleRead = () => {
     setNotifications([]);
     setContents([]);
+  };
+
+  const handleAccept = async (idA, idB) => {
+    await acceptFriendWithUI(idA, idB);
+    socket?.emit('sendNotification', {
+      senderId: idA,
+      receiverId: idB,
+      type: 3,
+    });
+    socket?.emit('sendNotification', {
+      senderId: idB,
+      receiverId: idA,
+      type: 3,
+    });
+    setAccept(true);
   };
 
   return (
@@ -83,19 +124,19 @@ function Notifications({ socket }) {
       </label>
       <ul
         tabIndex='0'
-        className='mt-1 shadow menu menu-compact dropdown-content bg-base-200 rounded-box w-72'
+        className='mt-1 shadow menu menu-compact dropdown-content bg-base-200 rounded-box w-80'
       >
         {contents?.map((content, index) => disPlayNotification(content, index))}
         {notifications.length > 0 && (
           <li
-            className='w-48 mx-auto my-2 btn rounded-box'
+            className='w-48 mx-auto my-2 btn btn-primary rounded-box'
             onClick={handleRead}
           >
             Mark as Read
           </li>
         )}
         {notifications.length < 1 && (
-          <li className='w-72 rounded-box bg-base-300 py-2'>
+          <li className='w-80 rounded-box bg-base-300 py-2'>
             <p className='text-base rounded-box mx-auto'>
               No new notifications.
             </p>

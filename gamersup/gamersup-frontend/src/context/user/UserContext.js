@@ -310,9 +310,17 @@ export const UserProvider = ({ children }) => {
     );
   };
 
-  /** accept friend  */
+  /** accept friend with email  */
   const acceptFriend = (userId, gamerId) => {
     return axios.post(`${API_URL}/gamerinfo/friendsAdd/${userId}&${gamerId}`);
+  };
+
+  /** accept friend with UI  */
+  const acceptFriendWithUI = async (userId, gamerId) => {
+    return await axios.post(`${API_URL}/gamerinfo/accept/friend`, {
+      gamerAId: userId,
+      gamerBId: gamerId,
+    });
   };
 
   /** get recommended friend list from back end */
@@ -387,6 +395,7 @@ export const UserProvider = ({ children }) => {
         isFriend,
         addFriend,
         acceptFriend,
+        acceptFriendWithUI,
         getRecommendFriends,
         getRecommendGames,
         hasRatings,

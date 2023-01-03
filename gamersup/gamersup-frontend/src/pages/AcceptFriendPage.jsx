@@ -9,7 +9,20 @@ function AcceptFriendPage() {
 
   useEffect(() => {
     acceptFriend(params.idA, params.idB);
-  });
+  }, []);
+
+  // useEffect(() => {
+  //   socket?.emit('sendNotification', {
+  //     senderId: params.idA,
+  //     receiverId: params.idB,
+  //     type: 3,
+  //   });
+  //   socket?.emit('sendNotification', {
+  //     senderId: params.idB,
+  //     receiverId: params.idA,
+  //     type: 3,
+  //   });
+  // }, [socket, params.idA, params.idB]);
 
   return (
     <p className='text-2xl text-center'>

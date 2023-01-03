@@ -53,6 +53,11 @@ function ProfileComponent({ gamer, socket }) {
   };
 
   const askForFriend = async () => {
+    socket?.emit('sendNotification', {
+      senderId: user.id,
+      receiverId: id,
+      type: 2,
+    });
     await addFriend(user.id, id);
   };
 

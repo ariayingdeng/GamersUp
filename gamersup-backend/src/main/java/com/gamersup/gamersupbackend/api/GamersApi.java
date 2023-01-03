@@ -1,5 +1,7 @@
 package com.gamersup.gamersupbackend.api;
 
+import com.gamersup.gamersupbackend.model.Friends;
+import com.gamersup.gamersupbackend.model.FriendsPair;
 import com.gamersup.gamersupbackend.model.profile.*;
 import com.gamersup.gamersupbackend.service.GamerService;
 import lombok.AllArgsConstructor;
@@ -64,6 +66,16 @@ public class GamersApi {
             return new ResponseEntity<>("Created!", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Failed", HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    // For accepting friend request with UI
+    @PostMapping("/accept/friend")
+    public ResponseEntity<Boolean> acceptFriendRequest(@RequestBody Friends friends) {
+        if (service.acceptFriendRequest(friends.getGamerAId(), friends.getGamerBId())) {
+            return new ResponseEntity<>(true, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
         }
     }
 
