@@ -7,7 +7,6 @@ function Notifications({ socket }) {
   const { getGamerById } = useContext(UserContext);
 
   const [notifications, setNotifications] = useState([]);
-
   const [contents, setContents] = useState([]); // content of the notifications: id, avatarUrl, message
 
   useEffect(() => {
@@ -68,12 +67,18 @@ function Notifications({ socket }) {
     );
   };
 
+  const handleRead = () => {
+    setNotifications([]);
+    setContents([]);
+  };
+
   return (
     <div className='dropdown dropdown-end'>
       <label tabIndex='0' className='btn btn-ghost btn-lg btn-circle'>
         <span className='material-symbols-outlined'>notifications</span>
         {notifications.length > 0 && (
-          <span className='badge badge-xs badge-error indicator-item'></span>
+          // <span className='badge badge-xs badge-error indicator-item'></span>
+          <div className='notificationsNum'>{notifications.length}</div>
         )}
       </label>
       <ul
@@ -81,6 +86,21 @@ function Notifications({ socket }) {
         className='mt-1 shadow menu menu-compact dropdown-content bg-base-200 rounded-box w-72'
       >
         {contents?.map((content, index) => disPlayNotification(content, index))}
+        {notifications.length > 0 && (
+          <li
+            className='w-48 mx-auto my-2 btn rounded-box'
+            onClick={handleRead}
+          >
+            Mark as Read
+          </li>
+        )}
+        {notifications.length < 1 && (
+          <li className='w-72 rounded-box bg-base-300 py-2'>
+            <p className='text-base rounded-box mx-auto'>
+              No new notifications.
+            </p>
+          </li>
+        )}
       </ul>
     </div>
   );
