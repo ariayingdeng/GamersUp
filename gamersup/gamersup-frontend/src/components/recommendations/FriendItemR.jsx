@@ -1,11 +1,14 @@
 import { useContext, useState, useEffect } from 'react';
 import UserContext from '../../context/user/UserContext';
 import gamerAvatar from '../../images/gamers-logo.png';
-import { PlusCircleIcon, ThumbUpIcon } from '@heroicons/react/solid';
+import {
+  CheckCircleIcon,
+  PlusCircleIcon,
+  ThumbUpIcon,
+} from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
 
 function FriendItemR({ userID, gamerID, socket }) {
-
   const {
     isLoggedIn,
     getGamerById,
@@ -18,6 +21,7 @@ function FriendItemR({ userID, gamerID, socket }) {
   const [gamer, setGamer] = useState({});
   const [friend, setFriend] = useState(false);
   const [clickLike, setClickLike] = useState(false);
+  const [clickAdd, setClickAdd] = useState(false); // for requesting to add friend
 
   useEffect(() => {
     getGamerById(gamerID)
@@ -44,6 +48,7 @@ function FriendItemR({ userID, gamerID, socket }) {
         type: 2,
       });
       await addFriend(userID, gamerID);
+      setClickAdd(true);
     }
   };
 
@@ -103,15 +108,16 @@ function FriendItemR({ userID, gamerID, socket }) {
               <ThumbUpIcon className='inline mr-1 w-4' />
               {gamer.likes}
             </div>
-            {friend && (
-              <PlusCircleIcon className='btn btn-ghost btn-circle mr-1 w-8 text-primary' />
-            )}
-            {!friend && (
-              <PlusCircleIcon
-                className='btn btn-ghost btn-circle mr-1 w-8 hover:text-primary'
-                onClick={handleAdd}
-              />
-            )}
+            {friend && <CheckCircleIcon className='mr-1 w-8 text-primary' />}
+            {!friend &&
+              (clickAdd ? (
+                <PlusCircleIcon className='text-primary mr-1 w-8' />
+              ) : (
+                <PlusCircleIcon
+                  className='btn btn-ghost btn-circle mr-1 w-8 hover:text-primary'
+                  onClick={handleAdd}
+                />
+              ))}
           </div>
         </div>
       </div>
