@@ -21,8 +21,8 @@ public class AccountApi {
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+//    @Autowired
+//    private CustomUserDetailsService customUserDetailsService;
 
     private final UserService userService;
     private final RegistrationService registrationService;
