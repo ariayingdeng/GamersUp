@@ -3,12 +3,10 @@ import { Link } from 'react-router-dom';
 
 function Chat({ socket }) {
   //socket for notifications
-  // const [chatReminders, setChatReminders] = useState();
   const [newChat, setNewChat] = useState(false);
 
   useEffect(() => {
     socket?.on('getChatReminder', (data) => {
-      // setChatReminders(data);
       setNewChat(true);
     });
   }, [socket]);

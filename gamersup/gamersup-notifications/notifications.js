@@ -36,11 +36,11 @@ io.on('connection', (socket) => {
   });
 
   /** Notification types:
-   * type = 1: like profile, 
-   * type = 2: friend request, 
-   * type = 3: friend request accepted, 
-   * type = 4: replies of comments, 
-   * type = 5: chat reminder */ 
+   * type = 1: like profile,
+   * type = 2: friend request,
+   * type = 3: friend request accepted,
+   * type = 4: replies of comments,
+   * type = 5: chat reminder */
   socket.on('sendNotification', ({ senderId, receiverId, type }) => {
     console.log(
       'Notification sent ' + senderId + ' ' + receiverId + ' ' + type

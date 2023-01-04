@@ -1,14 +1,17 @@
 import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import ChatContext from '../../../context/chat/ChatContext';
 import UserContext from '../../../context/user/UserContext';
 import gamerAvatar from '../../../images/gamers-logo.png';
 
 function Avatar({ socket }) {
   const { logout, user } = useContext(UserContext);
+  const { clearMessages } = useContext(ChatContext);
 
   const handleClickLogout = () => {
     logout();
     socket?.emit('userLogout');
+    clearMessages();
   };
 
   return (
