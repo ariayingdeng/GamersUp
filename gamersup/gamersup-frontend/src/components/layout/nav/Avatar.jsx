@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import UserContext from '../../../context/user/UserContext';
 import gamerAvatar from '../../../images/gamers-logo.png';
@@ -15,8 +15,15 @@ function Avatar({ socket }) {
     <div className='dropdown dropdown-end'>
       <label tabIndex='0' className='btn btn-ghost btn-circle avatar'>
         <div className='w-12 rounded-full mt-2'>
-          {user.avatarUrl !== null && <img src={user.avatarUrl} alt='avatar' />}
-          {user.avatarUrl === null && <img src={gamerAvatar} alt='avatar' />}
+          {/* {user.avatarUrl !== null && <img src={user.avatarUrl} alt='avatar' />}
+          {user.avatarUrl === null && <img src={gamerAvatar} alt='avatar' />} */}
+          <img
+            src={user.avatarUrl !== null ? user.avatarUrl : gamerAvatar}
+            alt='avatar'
+            onError={(e) => {
+              e.target.src = gamerAvatar;
+            }}
+          />
         </div>
       </label>
       <ul

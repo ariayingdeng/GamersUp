@@ -15,7 +15,6 @@ function FriendItemR({ userID, gamerID, socket }) {
     isFriend,
     addFriend,
     changeLikes,
-    getLikes,
   } = useContext(UserContext);
 
   const [gamer, setGamer] = useState({});

@@ -56,7 +56,7 @@ function ReviewItem({ item }) {
             to={`/profile/${userID}`}
             className='mr-2 mb-2 text-gray-400 flex justify-start'
           >
-            {commenter?.avatarUrl === null && (
+            {/* {commenter?.avatarUrl === null && (
               <img
                 src={gamerAvatar}
                 alt='avatar'
@@ -69,7 +69,17 @@ function ReviewItem({ item }) {
                 alt='avatar'
                 className='w-10 rounded-full'
               />
-            )}
+            )} */}
+            <img
+              src={
+                commenter?.avatarUrl !== null ? commenter?.avatarUrl : gamerAvatar
+              }
+              alt='avatar'
+              className='w-10 h-10 rounded-full'
+              onError={(e) => {
+                e.target.src = gamerAvatar;
+              }}
+            />
             <p className='mt-2 ml-3'>{commenter?.name}</p>
           </Link>
           {isLoggedIn() && user?.id === commenter?.id && (

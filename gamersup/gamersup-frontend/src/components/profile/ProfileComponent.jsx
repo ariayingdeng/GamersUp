@@ -73,8 +73,15 @@ function ProfileComponent({ gamer, socket }) {
           </div>
           <div className='avatar mt-4 justify-center mx-auto flex mb-6'>
             <div className='mb-2 w-64 h-64 mask mask-squircle '>
-              {avatarUrl === null && <img src={gamerAvatar} alt='avatar' />}
-              {avatarUrl !== null && <img src={imgUrl} alt='Avatar' />}
+              {/* {avatarUrl === null && <img src={gamerAvatar} alt='avatar' />}
+              {avatarUrl !== null && <img src={imgUrl} alt='Avatar' />} */}
+              <img
+                src={user.avatarUrl !== null ? user.avatarUrl : gamerAvatar}
+                alt='avatar'
+                onError={(e) => {
+                  e.target.src = gamerAvatar;
+                }}
+              />
             </div>
           </div>
           {id === user.id && (
@@ -115,7 +122,10 @@ function ProfileComponent({ gamer, socket }) {
                 className='rounded-full bg-primary px-6 py-2 flex justify-center hover:bg-primary-focus'
                 onClick={askForFriend}
               >
-                <span className='material-symbols-outlined mr-2'>group_add</span> <strong>Add friend</strong>
+                <span className='material-symbols-outlined mr-2'>
+                  group_add
+                </span>{' '}
+                <strong>Add friend</strong>
               </button>
             </div>
           )}
