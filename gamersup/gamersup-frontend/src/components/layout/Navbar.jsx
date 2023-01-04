@@ -46,7 +46,7 @@ function Navbar({ socket, title }) {
                 <Recommendations />
                 <Friends />
                 <Notifications socket={socket} />
-                <Chat />
+                <Chat socket={socket} />
                 <Avatar socket={socket} />
               </>
             )}

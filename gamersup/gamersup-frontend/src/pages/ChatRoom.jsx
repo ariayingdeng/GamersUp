@@ -5,7 +5,8 @@ import FriendComponent from '../components/account/FriendComponent';
 const ws = socketIOClient('http://localhost:3000');
 // const useMountEffect = (fun) => useEffect(fun, [])
 
-function ChatRoom() {
+function ChatRoom({ socket }) {
+  // socket: for notifications
   const scrollRef = useRef(null);
   const [userList, setUserList] = useState([]);
   const user = JSON.parse(sessionStorage.getItem('user'));
@@ -61,7 +62,7 @@ function ChatRoom() {
       ws.off('left');
       ws.off('user-list');
     };
-  }, []);
+  }, [ws]);
 
   useEffect(() => {
     if (user !== null) {
@@ -117,6 +118,11 @@ function ChatRoom() {
     ws.emit('sendMessage', {
       name: user.name,
       message: message,
+    });
+    // For chat reminder on the nav bar
+    socket.emit('sendChatReminder', {
+      senderId: user.id,
+      type: 5,
     });
   };
 

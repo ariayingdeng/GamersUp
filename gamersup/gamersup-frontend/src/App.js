@@ -84,7 +84,7 @@ function App() {
                         path='/chatRoom'
                         element={
                           <AuthenticatedRoute>
-                            <ChatRoom />
+                            <ChatRoom socket={socket} />
                           </AuthenticatedRoute>
                         }
                       />

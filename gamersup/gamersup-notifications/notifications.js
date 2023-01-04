@@ -35,6 +35,12 @@ io.on('connection', (socket) => {
     console.log(JSON.stringify(onlineUsers));
   });
 
+  /** Notification types:
+   * type = 1: like profile, 
+   * type = 2: friend request, 
+   * type = 3: friend request accepted, 
+   * type = 4: replies of comments, 
+   * type = 5: chat reminder */ 
   socket.on('sendNotification', ({ senderId, receiverId, type }) => {
     console.log(
       'Notification sent ' + senderId + ' ' + receiverId + ' ' + type
@@ -48,6 +54,15 @@ io.on('connection', (socket) => {
       console.log('receiver ' + receiver.userId + ' ' + receiver.socketId);
     }
     console.log(JSON.stringify(onlineUsers));
+  });
+
+  // For chat icon reminder
+  socket.on('sendChatReminder', ({ senderId, type }) => {
+    console.log('Chat sent ' + senderId + ' ' + type);
+    io.emit('getChatReminder', {
+      senderId,
+      type,
+    });
   });
 
   socket.on('disconnect', () => {
