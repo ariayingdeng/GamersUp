@@ -91,10 +91,10 @@ function FriendItemR({ userID, gamerID, socket }) {
         </div>
         <div className='w-40'>
           <div className='flex'>
-            <h3 className='card-title'>
+            <h3 className='card-title my-auto'>
               <Link to={`/profile/` + gamerID}>{gamer.name}</Link>
             </h3>
-            <div className='badge badge-success font-semibold ml-3 mt-1'>
+            <div className='badge badge-success font-semibold ml-3 my-auto'>
               {gamer.level === 0 && <span>Newbie</span>}
               {gamer.level === 1 && <span>Veteran</span>}
               {gamer.level === 2 && <span>Pro</span>}
@@ -104,22 +104,24 @@ function FriendItemR({ userID, gamerID, socket }) {
           <p className='my-1'>{gamer.bio}</p>
           <div className='flex justify-between'>
             <div
-              className='btn-ghost badge badge-accent font-bold mt-3 hover:text-primary'
+              className='my-auto btn-ghost badge badge-accent font-bold hover:text-primary'
               onClick={handleClickLike}
             >
               <ThumbUpIcon className='inline mr-1 w-4' />
               {gamer.likes}
             </div>
-            {friend && <CheckCircleIcon className='mr-1 w-8 text-primary' />}
-            {!friend &&
-              (clickAdd ? (
-                <PlusCircleIcon className='text-primary mr-1 w-8' />
-              ) : (
-                <PlusCircleIcon
-                  className='btn btn-ghost btn-circle mr-1 w-8 hover:text-primary'
-                  onClick={handleAdd}
-                />
-              ))}
+            <div className='mr-1 w-8 my-auto'>
+              {friend && <CheckCircleIcon className='text-primary' />}
+              {!friend &&
+                (clickAdd ? (
+                  <PlusCircleIcon className='my-2 text-primary hover:text-primary' />
+                ) : (
+                  <PlusCircleIcon
+                    className='btn btn-ghost btn-circle w-8 hover:text-primary'
+                    onClick={handleAdd}
+                  />
+                ))}
+            </div>
           </div>
         </div>
       </div>
