@@ -11,7 +11,7 @@ import { AlertProvider } from './context/alert/AlertContext';
 import { GamesProvider } from './context/games/GamesContext';
 import { UserProvider } from './context/user/UserContext';
 import { ReviewProvider } from './context/games/ReviewContext';
-import { NotificationProvider } from './context/notifications/NotificationContext';
+import { ChatProvider } from './context/chat/ChatContext';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import GameDetailsPage from './pages/GameDetailsPage';
@@ -21,8 +21,6 @@ import AcceptFriendPage from './pages/AcceptFriendPage';
 import ChatRoom from './pages/ChatRoom';
 import RecommendationPage from './pages/RecommendationPage';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
-import { io } from 'socket.io-client';
-import { useEffect, useState } from 'react';
 import useSocket from './hooks/useSocket';
 
 function App() {
@@ -33,7 +31,7 @@ function App() {
       <UserProvider>
         <ReviewProvider>
           <AlertProvider>
-            <NotificationProvider>
+            <ChatProvider>
               <Router>
                 <div className='flex flex-col justify-between h-screen'>
                   <Navbar socket={socket} />
@@ -94,7 +92,7 @@ function App() {
                   <Footer />
                 </div>
               </Router>
-            </NotificationProvider>
+            </ChatProvider>
           </AlertProvider>
         </ReviewProvider>
       </UserProvider>
