@@ -76,7 +76,7 @@ function ProfileComponent({ gamer, socket }) {
               {/* {avatarUrl === null && <img src={gamerAvatar} alt='avatar' />}
               {avatarUrl !== null && <img src={imgUrl} alt='Avatar' />} */}
               <img
-                src={user.avatarUrl !== null ? user.avatarUrl : gamerAvatar}
+                src={imgUrl !== null ? imgUrl : gamerAvatar}
                 alt='avatar'
                 onError={(e) => {
                   e.target.src = gamerAvatar;

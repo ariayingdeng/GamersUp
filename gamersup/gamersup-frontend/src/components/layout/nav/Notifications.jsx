@@ -54,7 +54,7 @@ function Notifications({ socket }) {
       <li key={index} className='w-80 rounded-box bg-base-300 my-1'>
         <div className='grid grid-cols-6 gap-1'>
           <Link to={'/profile/' + content.id} className='rounded-box'>
-            {content.avatarUrl === null && (
+            {/* {content.avatarUrl === null && (
               <img
                 src={gamerAvatar}
                 alt='avatar'
@@ -67,7 +67,15 @@ function Notifications({ socket }) {
                 alt='avatar'
                 className='w-8 rounded-full avatar'
               />
-            )}
+            )} */}
+            <img
+              src={content.avatarUrl !== null ? content.avatarUrl : gamerAvatar}
+              alt='avatar'
+              className='w-8 h-8 rounded-full avatar'
+              onError={(e) => {
+                e.target.src = gamerAvatar;
+              }}
+            />
           </Link>
           <div className='my-auto text-base col-span-5 flex justify-between'>
             <Link to={'/profile/' + content.id}>{content.message}</Link>

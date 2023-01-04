@@ -9,13 +9,8 @@ import {
 import { Link } from 'react-router-dom';
 
 function FriendItemR({ userID, gamerID, socket }) {
-  const {
-    isLoggedIn,
-    getGamerById,
-    isFriend,
-    addFriend,
-    changeLikes,
-  } = useContext(UserContext);
+  const { isLoggedIn, getGamerById, isFriend, addFriend, changeLikes } =
+    useContext(UserContext);
 
   const [gamer, setGamer] = useState({});
   const [friend, setFriend] = useState(false);
@@ -70,20 +65,28 @@ function FriendItemR({ userID, gamerID, socket }) {
       <div className='flex-row items-center space-x-4 card-body'>
         <div className='avatar rounded-full shadow w-14 h-14'>
           <Link to={`/profile/` + gamerID}>
-            {gamer.avatarUrl !== null && (
+            {/* {gamer.avatarUrl !== null && (
               <img
                 src={gamer.avatarUrl}
                 alt='Avatar'
-                className='w-14 rounded-full avatar'
+                className='w-14 h-14 rounded-full avatar'
               />
             )}
             {gamer.avatarUrl === null && (
               <img
                 src={gamerAvatar}
                 alt='avatar'
-                className='w-14 rounded-full avatar'
+                className='w-14 h-14 rounded-full avatar'
               />
-            )}
+            )} */}
+            <img
+              src={gamer.avatarUrl !== null ? gamer.avatarUrl : gamerAvatar}
+              alt='avatar'
+              className='w-14 h-14 rounded-full avatar'
+              onError={(e) => {
+                e.target.src = gamerAvatar;
+              }}
+            />
           </Link>
         </div>
         <div className='w-40'>
