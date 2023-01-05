@@ -16,7 +16,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/reviews")
 @AllArgsConstructor
-@CrossOrigin(origins="http://localhost:5252")
+@CrossOrigin(origins = "http://localhost:5252")
 public class ReviewApi {
     private ReviewService reviewService;
 
@@ -135,6 +135,21 @@ public class ReviewApi {
     public ResponseEntity<Void> deleteReply(@PathVariable long replyid) {
         reviewService.deleteReply(replyid);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/review={reviewid}/gamer={gamerid}/addstar")
+    public Boolean addStar(@PathVariable long reviewid, @PathVariable long gamerid) {
+        return reviewService.addStar(reviewid, gamerid);
+    }
+
+    @PutMapping("/review={reviewid}/gamer={gamerid}/decrementstar")
+    public Boolean decrementStar(@PathVariable long reviewid, @PathVariable long gamerid) {
+        return reviewService.decrementStar(reviewid, gamerid);
+    }
+
+    @GetMapping("/review={reviewid}/gamer={gamerid}/isstarred")
+    public Boolean checkIsStarred(@PathVariable long reviewid, @PathVariable long gamerid) {
+        return reviewService.isStarred(reviewid, gamerid);
     }
 
 }

@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 import ReviewContext from '../../../context/games/ReviewContext';
 import ReplyContext from '../../../context/games/ReplyContext';
 import UserContext from '../../../context/user/UserContext';
-import { FaTimes, FaEdit, FaStar, FaCommentDots } from 'react-icons/fa';
+import { FaTimes, FaEdit, FaCommentDots } from 'react-icons/fa';
+import { BsStar, BsStarFill } from 'react-icons/bs';
 import PropTypes from 'prop-types';
 import EditReviewForm from './EditReviewForm';
 import gamerAvatar from '../../../images/gamers-logo.png';
 import Replies from '../replies/Replies';
 
 function ReviewItem({ item }) {
-  const { deleteReview } = useContext(ReviewContext);
+  const { deleteReview, addStar, cancelStar, checkiIsStarred } =
+    useContext(ReviewContext);
   const { newReply, getRepliesByReviewId } = useContext(ReplyContext);
   const { user, isLoggedIn, getGamerById } = useContext(UserContext);
   const [commenter, setCommenter] = useState();
@@ -20,8 +22,9 @@ function ReviewItem({ item }) {
   });
   const [openReplies, setOpenReplies] = useState(false);
   const [replies, setReplies] = useState([]);
+  const [starred, setStarred] = useState(false);
 
-  const { id, gameID, userID, rating, comment } = item;
+  const { id, gameID, userID, rating, comment, stars } = item;
 
   useEffect(() => {
     if (userID !== null) {
@@ -37,6 +40,13 @@ function ReviewItem({ item }) {
       setReplies(response.data);
     });
   }, [newReply]);
+
+  // check starred
+  useEffect(() => {
+    checkiIsStarred(id, user.id).then((response) => {
+      setStarred(response.data);
+    });
+  }, []);
 
   const handleClickEdit = (e) => {
     if (itemEdit.edit === false) {
@@ -57,6 +67,16 @@ function ReviewItem({ item }) {
       item: {},
       edit: false,
     });
+  };
+
+  const handleClickStar = (e) => {
+    if (starred === false) {
+      addStar(id, user.id);
+      setStarred(true);
+    } else {
+      cancelStar(id, user.id);
+      setStarred(false);
+    }
   };
 
   if (rating !== 0 && rating !== 6) {
@@ -97,9 +117,12 @@ function ReviewItem({ item }) {
             className='
       flex justify-end'
           >
-            <button className='hover:bg-primary mr-5 badge badge-warning badge-lg'>
-              <FaStar className='mr-2' /> Starred &nbsp;
-              <span className='font-semibold'>36</span>
+            <button
+              onClick={handleClickStar}
+              className='hover:bg-primary mr-5 badge badge-warning badge-lg'
+            >
+              {starred ? <BsStarFill className='mr-2' /> : <BsStar className='mr-2' />} Starred &nbsp;
+              <span className='font-semibold'>{stars}</span>
             </button>
             <button
               onClick={() => setOpenReplies(true)}
