@@ -77,7 +77,7 @@ public class ReviewApi {
     }
 
     // Create a new reply
-    @PostMapping("/review={reviewid}")
+    @PostMapping("/review={reviewid}/reply")
     public ResponseEntity<Reply> addReply(@PathVariable long reviewid, @RequestBody Reply reply) {
         reply.setReviewID(reviewid);
         Reply newReply = reviewService.saveReply(reply);
@@ -97,7 +97,7 @@ public class ReviewApi {
     }
 
     // Read replies with review id
-    @GetMapping("/review={reviewid}/replies")
+    @GetMapping("/review={reviewid}/allreplies")
     public List<Reply> getAllReplies(@PathVariable long reviewid) {
         return reviewService.getAllRepliesByReviewID(reviewid);
     }

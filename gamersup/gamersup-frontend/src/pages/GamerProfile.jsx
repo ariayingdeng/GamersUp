@@ -2,7 +2,7 @@ import { useContext, useEffect, React, useState } from 'react';
 import UserContext from '../context/user/UserContext';
 import GameListForProfile from '../components/profile/GameListForProfile';
 import ProfileComponent from '../components/profile/ProfileComponent';
-import LoginForm from '../components/account/LoginForm';
+import LoginForm from './LoginForm';
 import Loading from '../components/layout/Loading';
 import { useParams } from 'react-router-dom';
 

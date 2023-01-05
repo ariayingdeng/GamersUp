@@ -1,7 +1,7 @@
-import { React, useContext, useState, useEffect } from 'react'
+import { React, useContext, useState } from 'react'
 import RatingSelect from './RatingSelect'
-import ReviewContext from '../../context/games/ReviewContext'
-import UserContext from '../../context/user/UserContext'
+import ReviewContext from '../../../context/games/ReviewContext'
+import UserContext from '../../../context/user/UserContext'
 
 function ReviewForm({ gameId }) {
   const { addReview } = useContext(ReviewContext)
@@ -35,6 +35,9 @@ function ReviewForm({ gameId }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     addReview(user.id, gameId, rating, text)
+    setRating(5)
+    setText('')
+    setBtnDisabled(true)
   }
 
   return (

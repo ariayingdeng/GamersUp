@@ -53,7 +53,9 @@ public class ReviewService {
     }
 
     public List<Reply> getAllRepliesByReviewID(Long reviewID) {
-        return replyRepository.findAllByReviewID(reviewID);
+        List<Reply> replies = replyRepository.findAllByReviewID(reviewID);
+        Collections.reverse(replies);
+        return replies;
     }
 
     public Optional<Review> findReviewById(long reviewid) {

@@ -1,20 +1,25 @@
 import { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import ReviewContext from '../../context/games/ReviewContext';
-import UserContext from '../../context/user/UserContext';
+import ReviewContext from '../../../context/games/ReviewContext';
+import ReplyContext from '../../../context/games/ReplyContext';
+import UserContext from '../../../context/user/UserContext';
 import { FaTimes, FaEdit, FaStar, FaCommentDots } from 'react-icons/fa';
 import PropTypes from 'prop-types';
-import EditReviewForm from '../games/EditReviewForm';
-import gamerAvatar from '../../images/gamers-logo.png';
+import EditReviewForm from './EditReviewForm';
+import gamerAvatar from '../../../images/gamers-logo.png';
+import Replies from '../replies/Replies';
 
 function ReviewItem({ item }) {
   const { deleteReview } = useContext(ReviewContext);
+  const { newReply, getRepliesByReviewId } = useContext(ReplyContext);
   const { user, isLoggedIn, getGamerById } = useContext(UserContext);
   const [commenter, setCommenter] = useState();
   const [itemEdit, setItemEdit] = useState({
     item: {},
     edit: false,
   });
+  const [openReplies, setOpenReplies] = useState(false);
+  const [replies, setReplies] = useState([]);
 
   const { id, gameID, userID, rating, comment } = item;
 
@@ -25,6 +30,13 @@ function ReviewItem({ item }) {
       });
     }
   }, []);
+
+  // get replies of this review
+  useEffect(() => {
+    getRepliesByReviewId(id).then((response) => {
+      setReplies(response.data);
+    });
+  }, [newReply]);
 
   const handleClickEdit = (e) => {
     if (itemEdit.edit === false) {
@@ -56,23 +68,11 @@ function ReviewItem({ item }) {
             to={`/profile/${userID}`}
             className='mr-2 mb-2 text-gray-400 flex justify-start'
           >
-            {/* {commenter?.avatarUrl === null && (
-              <img
-                src={gamerAvatar}
-                alt='avatar'
-                className='w-10 rounded-full'
-              />
-            )}
-            {commenter?.avatarUrl !== null && (
-              <img
-                src={commenter?.avatarUrl}
-                alt='avatar'
-                className='w-10 rounded-full'
-              />
-            )} */}
             <img
               src={
-                commenter?.avatarUrl !== null ? commenter?.avatarUrl : gamerAvatar
+                commenter?.avatarUrl !== null
+                  ? commenter?.avatarUrl
+                  : gamerAvatar
               }
               alt='avatar'
               className='w-10 h-10 rounded-full'
@@ -101,9 +101,12 @@ function ReviewItem({ item }) {
               <FaStar className='mr-2' /> Starred &nbsp;
               <span className='font-semibold'>36</span>
             </button>
-            <button className='hover:bg-primary mr-5 badge badge-success badge-lg'>
-              <FaCommentDots className='mr-2' /> Comments &nbsp;
-              <span className='font-semibold'>12</span>
+            <button
+              onClick={() => setOpenReplies(true)}
+              className='hover:bg-primary mr-5 badge badge-success badge-lg'
+            >
+              <FaCommentDots className='mr-2' /> Replies &nbsp;
+              <span className='font-semibold'>{replies.length}</span>
             </button>
           </div>
         </div>
@@ -112,6 +115,13 @@ function ReviewItem({ item }) {
             gameId={gameID}
             itemEdit={itemEdit}
             closeEditForm={closeEditForm}
+          />
+        )}
+        {openReplies && (
+          <Replies
+            reviewID={id}
+            setOpenReplies={setOpenReplies}
+            replies={replies}
           />
         )}
       </>

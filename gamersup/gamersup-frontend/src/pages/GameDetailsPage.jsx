@@ -4,8 +4,8 @@ import GamesContext from '../context/games/GamesContext';
 import ReviewContext from '../context/games/ReviewContext';
 import Loading from '../components/layout/Loading';
 import gameimage from '../images/gameimage.jpg';
-import ReviewForm from '../components/games/ReviewForm';
-import ReviewsList from '../components/games/ReviewsList';
+import ReviewForm from '../components/games/reviews/ReviewForm';
+import ReviewsList from '../components/games/reviews/ReviewsList';
 import WantPlayedStats from '../components/games/WantPlayedStats';
 
 function GameDetailsPage() {
