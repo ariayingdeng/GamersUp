@@ -10,7 +10,7 @@ import EditReviewForm from './EditReviewForm';
 import gamerAvatar from '../../../images/gamers-logo.png';
 import Replies from '../replies/Replies';
 
-function ReviewItem({ item }) {
+function ReviewItem({ item, socket }) {
   const { deleteReview, addStar, cancelStar, checkiIsStarred } =
     useContext(ReviewContext);
   const { newReply, getRepliesByReviewId } = useContext(ReplyContext);
@@ -73,9 +73,22 @@ function ReviewItem({ item }) {
     if (starred === false) {
       addStar(id, user.id);
       setStarred(true);
+      socket?.emit('sendNotification', {
+        senderId: user.id,
+        receiverId: userID,
+        type: 4,
+      });
     } else {
       cancelStar(id, user.id);
       setStarred(false);
+    }
+  };
+
+  const handleClickReplies = (e) => {
+    if (openReplies === false) {
+      setOpenReplies(true);
+    } else {
+      setOpenReplies(false);
     }
   };
 
@@ -121,11 +134,16 @@ function ReviewItem({ item }) {
               onClick={handleClickStar}
               className='hover:bg-primary mr-5 badge badge-warning badge-lg'
             >
-              {starred ? <BsStarFill className='mr-2' /> : <BsStar className='mr-2' />} Starred &nbsp;
+              {starred ? (
+                <BsStarFill className='mr-2' />
+              ) : (
+                <BsStar className='mr-2' />
+              )}{' '}
+              Starred &nbsp;
               <span className='font-semibold'>{stars}</span>
             </button>
             <button
-              onClick={() => setOpenReplies(true)}
+              onClick={handleClickReplies}
               className='hover:bg-primary mr-5 badge badge-success badge-lg'
             >
               <FaCommentDots className='mr-2' /> Replies &nbsp;
@@ -142,9 +160,10 @@ function ReviewItem({ item }) {
         )}
         {openReplies && (
           <Replies
-            reviewID={id}
+            review={item}
             setOpenReplies={setOpenReplies}
             replies={replies}
+            socket={socket}
           />
         )}
       </>

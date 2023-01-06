@@ -24,7 +24,7 @@ function ReplyItem({ reply }) {
             commenter?.avatarUrl !== null ? commenter?.avatarUrl : gamerAvatar
           }
           alt='avatar'
-          className='w-10 h-10 rounded-full'
+          className='w-10 h-10 rounded-xl'
           onError={(e) => {
             e.target.src = gamerAvatar;
           }}

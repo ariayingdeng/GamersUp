@@ -3,13 +3,13 @@ import ReplyForm from './ReplyForm';
 import ReplyList from './ReplyList';
 import { FaTimes } from 'react-icons/fa';
 
-function Replies({ reviewID, setOpenReplies, replies }) {
+function Replies({ review, setOpenReplies, replies, socket }) {
   return (
     <div className='w-full review-card bg-teal-900'>
       <button onClick={() => setOpenReplies(false)} className='close'>
         <FaTimes color='pink' />
       </button>
-      <ReplyForm reviewID={reviewID} />
+      <ReplyForm review={review} socket={socket} />
       <ReplyList replies={replies} />
     </div>
   );

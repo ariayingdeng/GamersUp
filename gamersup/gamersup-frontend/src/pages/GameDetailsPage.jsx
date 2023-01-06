@@ -8,7 +8,7 @@ import ReviewForm from '../components/games/reviews/ReviewForm';
 import ReviewsList from '../components/games/reviews/ReviewsList';
 import WantPlayedStats from '../components/games/WantPlayedStats';
 
-function GameDetailsPage() {
+function GameDetailsPage({ socket }) {
   const { getGameByID, loading } = useContext(GamesContext);
 
   const { getReviewsByGameId } = useContext(ReviewContext);
@@ -121,7 +121,7 @@ function GameDetailsPage() {
             </div>
           </div>
           <ReviewForm gameId={gameid} />
-          <ReviewsList reviews={reviews} />
+          <ReviewsList reviews={reviews} socket={socket} />
         </div>
       </>
     );

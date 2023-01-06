@@ -44,7 +44,7 @@ function App() {
                         <Route path='/platform/:id' element={<GamesList />} />
                         <Route
                           path='/game/:gameid'
-                          element={<GameDetailsPage />}
+                          element={<GameDetailsPage socket={socket} />}
                         />
                         <Route path='/login' element={<LoginForm />} />
                         <Route path='/signup' element={<SignupForm />} />

@@ -2,9 +2,10 @@ import React, { useState, useContext } from 'react';
 import UserContext from '../../../context/user/UserContext';
 import ReplyContext from '../../../context/games/ReplyContext';
 
-function ReplyForm({ reviewID }) {
+function ReplyForm({ review, socket }) {
   const { user, isLoggedIn } = useContext(UserContext);
   const { addReply } = useContext(ReplyContext);
+  const { id, gameID, userID } = review;
 
   const [text, setText] = useState('');
   const [btnDisabled, setBtnDisabled] = useState(true);
@@ -27,9 +28,14 @@ function ReplyForm({ reviewID }) {
   };
 
   const handleSubmit = (e) => {
-    addReply(reviewID, user.id, text);
+    addReply(id, user.id, text);
     setText('');
     setBtnDisabled(true);
+    socket?.emit('sendReplyNotification', {
+      senderId: user.id,
+      receiverId: userID,
+      review: review,
+    });
   };
 
   return (
