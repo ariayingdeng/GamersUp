@@ -1,6 +1,6 @@
 import { React, useContext, useState } from 'react'
-import AlertContext from '../../context/alert/AlertContext'
-import UserContext from '../../context/user/UserContext'
+import AlertContext from '../context/alert/AlertContext'
+import UserContext from '../context/user/UserContext'
 import { LockClosedIcon, EyeIcon, EyeOffIcon } from '@heroicons/react/solid'
 import { useNavigate } from 'react-router-dom';
 
