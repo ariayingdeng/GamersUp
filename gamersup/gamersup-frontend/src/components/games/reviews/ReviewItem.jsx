@@ -132,7 +132,7 @@ function ReviewItem({ item, socket }) {
           >
             <button
               onClick={handleClickStar}
-              className='hover:bg-primary mr-5 badge badge-warning badge-lg'
+              className='mr-5 badge badge-warning badge-lg hover:bg-accent-focus'
             >
               {starred ? (
                 <BsStarFill className='mr-2' />
@@ -144,7 +144,7 @@ function ReviewItem({ item, socket }) {
             </button>
             <button
               onClick={handleClickReplies}
-              className='hover:bg-primary mr-5 badge badge-success badge-lg'
+              className='mr-5 badge badge-success badge-lg hover:bg-teal-400'
             >
               <FaCommentDots className='mr-2' /> Replies &nbsp;
               <span className='font-semibold'>{replies.length}</span>

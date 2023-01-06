@@ -51,7 +51,7 @@ function ReplyForm({ review, socket }) {
         <button
           type='submit'
           onClick={handleSubmit}
-          className='btn btn-primary focus:ring-2 focus:ring-offset-2 focus:ring-primary-focus'
+          className='btn btn-success hover:bg-teal-400'
           disabled={btnDisabled}
         >
           Send
