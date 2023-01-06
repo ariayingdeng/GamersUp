@@ -36,11 +36,11 @@ io.on('connection', (socket) => {
   });
 
   /** Notification types:
-   * type = 1: like profile, 
-   * type = 2: friend request, 
-   * type = 3: friend request accepted, 
-   * type = 4: replies of comments, 
-   * type = 5: chat reminder */ 
+   * type = 1: like profile,
+   * type = 2: friend request,
+   * type = 3: friend request accepted,
+   * type = 4: stars of reviews,
+   * type = 5: chat reminder */
   socket.on('sendNotification', ({ senderId, receiverId, type }) => {
     console.log(
       'Notification sent ' + senderId + ' ' + receiverId + ' ' + type
@@ -50,6 +50,27 @@ io.on('connection', (socket) => {
       io.to(receiver.socketId).emit('getNotification', {
         senderId,
         type,
+      });
+      console.log('receiver ' + receiver.userId + ' ' + receiver.socketId);
+    }
+    console.log(JSON.stringify(onlineUsers));
+  });
+
+  // For reply notification
+  socket.on('sendReplyNotification', ({ senderId, receiverId, review }) => {
+    console.log(
+      'Reply notification sent ' +
+        senderId +
+        ' ' +
+        receiverId +
+        ' ' +
+        JSON.stringify(review)
+    );
+    const receiver = getUser(receiverId);
+    if (receiver) {
+      io.to(receiver.socketId).emit('getReplyNotification', {
+        senderId,
+        gamerId: review.gameID,
       });
       console.log('receiver ' + receiver.userId + ' ' + receiver.socketId);
     }

@@ -1,7 +1,7 @@
 import { React, useContext, useState, useEffect } from 'react';
 import EditRatingSelect from './EditRatingSelect';
-import ReviewContext from '../../context/games/ReviewContext';
-import UserContext from '../../context/user/UserContext';
+import ReviewContext from '../../../context/games/ReviewContext';
+import UserContext from '../../../context/user/UserContext';
 import PropTypes from 'prop-types';
 import { FaTimes } from 'react-icons/fa';
 
@@ -54,6 +54,7 @@ function EditReviewForm({ gameId, itemEdit, closeEditForm }) {
       comment: text,
     };
     editReview(reviewID, newItem);
+    closeEditForm();
   };
 
   return (

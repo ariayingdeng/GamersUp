@@ -1,17 +1,16 @@
-import React from 'react'
-import { useState } from 'react'
+import React from 'react';
+import { useState } from 'react';
 
-function LevelSelect ( {handleChange, tempLevel}) {
+function LevelSelect({ handleChange, tempLevel }) {
+  const [selectedLevel, setSelectedLevel] = useState(tempLevel);
 
-    const [ selectedLevel, setSelectedLevel ] = useState(tempLevel)
+  const changeSelected = (e) => {
+    setSelectedLevel(e.target.value);
+    handleChange(e.target.value);
+  };
 
-    const changeSelected = (e) => {
-        setSelectedLevel(e.target.value);
-        handleChange(e.target.value);
-    }
-
-    return (
-        <ul className='grid grid-cols-1 gap-2' >
+  return (
+    <ul className='grid grid-cols-1 gap-2'>
       <li>
         <input
           type='radio'
@@ -44,12 +43,9 @@ function LevelSelect ( {handleChange, tempLevel}) {
           checked={selectedLevel == 2}
         />
         <label htmlFor='pro'>Pro</label>
-      </li>    
-     
+      </li>
     </ul>
-    )
-
- 
+  );
 }
 
 export default LevelSelect;

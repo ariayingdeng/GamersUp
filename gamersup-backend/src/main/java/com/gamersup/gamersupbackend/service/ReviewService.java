@@ -6,6 +6,8 @@ import com.gamersup.gamersupbackend.repo.ReplyRepository;
 import com.gamersup.gamersupbackend.repo.ReviewRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +55,9 @@ public class ReviewService {
     }
 
     public List<Reply> getAllRepliesByReviewID(Long reviewID) {
-        return replyRepository.findAllByReviewID(reviewID);
+        List<Reply> replies = replyRepository.findAllByReviewID(reviewID);
+        Collections.reverse(replies);
+        return replies;
     }
 
     public Optional<Review> findReviewById(long reviewid) {
@@ -87,6 +91,64 @@ public class ReviewService {
         Optional<Review> review = reviewRepository.findByUserIDAndGameIDAndRating(userID, gameID, 0);
         if (review.isPresent()) {
             return true;
+        }
+        return false;
+    }
+
+    // Add one star
+    public boolean addStar(long reviewid, long gamerid) {
+        Optional<Review> review = reviewRepository.findById(reviewid);
+        if (review.isPresent()) {
+            try {
+                Review updatedReview = review.get();
+                updatedReview.setStars(updatedReview.getStars() + 1);
+                List<Long> starredBy = updatedReview.getStarredBy();
+                if (starredBy != null) {
+                    starredBy.add(gamerid);
+                } else {
+                    List<Long> newStarredBy = new ArrayList<>();
+                    newStarredBy.add(gamerid);
+                    updatedReview.setStarredBy(newStarredBy);
+                }
+                reviewRepository.save(updatedReview);
+                return true;
+            } catch (Exception ex) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    // Decrement one star
+    public boolean decrementStar(long reviewid, long gamerid) {
+        Optional<Review> review = reviewRepository.findById(reviewid);
+        if (review.isPresent()) {
+            try {
+                Review updatedReview = review.get();
+                updatedReview.setStars(updatedReview.getStars() - 1);
+                List<Long> starredBy = updatedReview.getStarredBy();
+                starredBy.remove(Long.valueOf(gamerid));
+                reviewRepository.save(updatedReview);
+                return true;
+            } catch (Exception ex) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public boolean isStarred(long reviewid, long gamerid) {
+        Optional<Review> review = reviewRepository.findById(reviewid);
+        if (review.isPresent()) {
+            try {
+                Review updatedReview = review.get();
+                List<Long> starredBy = updatedReview.getStarredBy();
+                if (starredBy != null && starredBy.contains(gamerid)){
+                    return true;
+                }
+            } catch (Exception ex) {
+                return false;
+            }
         }
         return false;
     }

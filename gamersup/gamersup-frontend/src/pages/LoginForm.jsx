@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
-import UserContext from '../../context/user/UserContext';
-import AlertContext from '../../context/alert/AlertContext';
+import UserContext from '../context/user/UserContext';
+import AlertContext from '../context/alert/AlertContext';
 import {
   LockClosedIcon,
   EyeIcon,
@@ -8,7 +8,7 @@ import {
   MailIcon,
 } from '@heroicons/react/solid';
 import { Link, useNavigate } from 'react-router-dom';
-import Home from '../../pages/Home';
+import Home from './Home';
 import jwtDecode from 'jwt-decode';
 
 function LoginForm() {

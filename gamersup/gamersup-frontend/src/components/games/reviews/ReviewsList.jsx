@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import ReviewItem from './ReviewItem';
 
-function ReviewsList({ reviews }) {
+function ReviewsList({ reviews, socket }) {
   const [hasComment, setHasComment] = useState(false);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ function ReviewsList({ reviews }) {
           Latest Reviews
         </h2>
         {reviews?.map((item) => (
-          <ReviewItem key={item.id} item={item} />
+          <ReviewItem key={item.id} item={item} socket={socket} />
         ))}
       </div>
     );

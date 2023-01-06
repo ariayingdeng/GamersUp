@@ -9,6 +9,7 @@ function Notifications({ socket }) {
   const [notifications, setNotifications] = useState([]);
   const [contents, setContents] = useState([]); // content of the notifications: id, avatarUrl, message
   const [accept, setAccept] = useState(false);
+  const [replyNotifications, setReplyNotifications] = useState([]);
 
   useEffect(() => {
     socket?.on('getNotification', (data) => {
@@ -33,6 +34,25 @@ function Notifications({ socket }) {
     }
   }, [notifications]);
 
+  useEffect(() => {
+    socket?.on('getReplyNotification', (data) => {
+      setReplyNotifications((prev) => [...prev, data]);
+      const { senderId, gamerId } = data;
+      getGamerById(senderId)
+        .then((response) => {
+          const gamer = response.data;
+          const { id, avatarUrl, name } = gamer;
+          const type = 5;
+          const message = name + ' replied to your review.';
+          setContents((prev) => [
+            { id, avatarUrl, message, type, gamerId },
+            ...prev,
+          ]);
+        })
+        .catch((error) => console.log(error));
+    });
+  }, [socket]);
+
   const getNotificationMessage = (name, type) => {
     let content = name;
     switch (type) {
@@ -44,6 +64,9 @@ function Notifications({ socket }) {
         break;
       case 3:
         content += ' and you became friends!';
+        break;
+      case 4:
+        content += ' starred your review.';
         break;
     }
     return content;
@@ -95,6 +118,14 @@ function Notifications({ socket }) {
                 ACCEPTED
               </button>
             )}
+            {content.type === 5 && (
+              <Link
+                to={'/game/' + content.gamerId}
+                className='btn-primary w-24 h-9 my-auto rounded-lg hover:bg-primary-focus'
+              >
+                <p className='text-xs pl-1 py-2 font-semibold'>Check it out!</p>
+              </Link>
+            )}
           </div>
         </div>
       </li>
@@ -125,9 +156,9 @@ function Notifications({ socket }) {
     <div className='dropdown dropdown-end'>
       <label tabIndex='0' className='btn btn-ghost btn-lg btn-circle'>
         <span className='material-symbols-outlined'>notifications</span>
-        {notifications.length > 0 && (
+        {contents.length > 0 && (
           // <span className='badge badge-xs badge-error indicator-item'></span>
-          <div className='notificationsNum'>{notifications.length}</div>
+          <div className='notificationsNum'>{contents.length}</div>
         )}
       </label>
       <ul
@@ -135,15 +166,15 @@ function Notifications({ socket }) {
         className='mt-1 shadow menu menu-compact dropdown-content bg-base-200 rounded-box w-80'
       >
         {contents?.map((content, index) => disPlayNotification(content, index))}
-        {notifications.length > 0 && (
+        {contents.length > 0 && (
           <li
-            className='w-48 mx-auto my-2 btn btn-primary rounded-box'
+            className='w-48 mx-auto my-2 btn btn-secondary rounded-box'
             onClick={handleRead}
           >
             Mark as Read
           </li>
         )}
-        {notifications.length < 1 && (
+        {contents.length < 1 && (
           <li className='w-80 rounded-box bg-base-300 py-2'>
             <p className='text-base rounded-box mx-auto'>
               No new notifications.

@@ -73,6 +73,24 @@ export const ReviewProvider = ({ children }) => {
     return axios.put(`${API_URL}/reviews/review=${reviewID}`, newItem);
   };
 
+  const addStar = async (reviewID, gamerID) => {
+    return await axios.put(
+      `${API_URL}/reviews/review=${reviewID}/gamer=${gamerID}/addstar`
+    );
+  };
+
+  const cancelStar = async (reviewID, gamerID) => {
+    return await axios.put(
+      `${API_URL}/reviews/review=${reviewID}/gamer=${gamerID}/decrementstar`
+    );
+  };
+
+  const checkiIsStarred = async (reviewID, gamerID) => {
+    return await axios.get(
+      `${API_URL}/reviews/review=${reviewID}/gamer=${gamerID}/isstarred`
+    );
+  };
+
   return (
     <ReviewContext.Provider
       value={{
@@ -84,6 +102,9 @@ export const ReviewProvider = ({ children }) => {
         getReviewsByGameId,
         deleteReview,
         editReview,
+        addStar,
+        cancelStar,
+        checkiIsStarred,
       }}
     >
       {children}

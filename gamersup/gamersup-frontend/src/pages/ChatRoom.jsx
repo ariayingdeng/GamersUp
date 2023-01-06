@@ -1,105 +1,76 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import socketIOClient from 'socket.io-client';
 import FriendComponent from '../components/account/FriendComponent';
+import ChatContext from '../context/chat/ChatContext';
 
 const ws = socketIOClient('http://localhost:3000');
-// const useMountEffect = (fun) => useEffect(fun, [])
 
 function ChatRoom({ socket }) {
   // socket: for notifications
+
+  const { joined, joinChat, chatHistory, addMessage } = useContext(ChatContext);
   const scrollRef = useRef(null);
   const [userList, setUserList] = useState([]);
   const user = JSON.parse(sessionStorage.getItem('user'));
-
-  // useMountEffect(() => {
-  // ws.off('join_user').on('joined_user', (data) => {
-  //   if (data !== null && data.id > 0) {
-  //     getMessage(data, 'join')
-  //   }
-  //   // })
-  //   ws.on('joined_user', (data) => {
-  //     if (data !== null && data.id > 0) {
-  //       getMessage(data, 'join')
-  //     }
-  //   })
-  //   ws.on('message', (data) => {
-  //     getMessage(data, 'message')
-  //   })
-  //   ws.on('left', (data) => {
-  //     getMessage(data, 'left')
-  //   })
-  //   ws.on('user-list', (data) => {
-  //     if (data !== null) setUserList(data)
-  //   })
-
-  //   return () => {
-  //     ws.off('joined_user')
-  //     ws.off('message')
-  //     ws.off('left')
-  //     ws.off('user-list')
-  //   }
-  // }, [])
-
-  useEffect(() => {
-    ws.on('joined_user', (data) => {
-      if (data !== null && data.id > 0) {
-        getMessage(data, 'join');
-      }
-    });
-    ws.on('message', (data) => {
-      getMessage(data, 'message');
-    });
-    ws.on('left', (data) => {
-      getMessage(data, 'left');
-    });
-    ws.on('user-list', (data) => {
-      if (data !== null) setUserList(data);
-    });
-
-    return () => {
-      ws.off('joined_user');
-      ws.off('message');
-      ws.off('left');
-      ws.off('user-list');
-    };
-  }, [ws]);
+  // const joinData = {
+  //   name: user.name,
+  //   message: ' joined the chat room',
+  //   type: 'join',
+  // };
 
   useEffect(() => {
     if (user !== null) {
-      ws.emit('join', user);
-    }
+      ws.emit('requestUserList');
 
-    return () => {
-      ws.off('joined');
-    };
+      // Get the chat history
+      displayChatHistory(chatHistory);
+
+      // Display the join message
+      if (!joined) {
+        ws.emit('join', user);
+      }
+      // Set joined to true after joining the chat room
+      joinChat();
+    }
+  }, [ws]);
+
+  useEffect(() => {
+    ws.on('message', (data) => {
+      // setMessages((prev) => [...prev, data]);
+      addMessage(data);
+      displayMessage(data);
+    });
   }, [ws]);
 
   // Update the userList
-  // useEffect(() => {
-  //   ws.on('user-list', (data) => {
-  //     if (data !== null) setUserList(data);
-  //   });
+  useEffect(() => {
+    ws.on('user-list', (data) => {
+      if (data !== null) setUserList(data);
+    });
+  }, [ws]);
 
-  //   return () => {
-  //     ws.off('user-list');
-  //   };
-  // }, [ws]);
+  const displayChatHistory = (history) => {
+    history.map((data) => {
+      displayMessage(data);
+    });
+  };
 
-  const getMessage = (data, type) => {
+  const displayMessage = (data) => {
     let messageBox = document.querySelector('.message');
     var scrollHeight = messageBox.scrollHeight;
     let messageContainer = document.createElement('div');
-    switch (type) {
-      case 'message':
+    switch (data.type) {
+      case 'chat':
         messageContainer.innerText = data.name + ': ' + data.message;
         break;
       case 'join':
-        messageContainer.innerText = data.name + ' joined the room';
+        messageContainer.innerText = data.name + ' joined the chat room';
         break;
       case 'left':
-        messageContainer.innerText = data.name + ' left the room';
+        messageContainer.innerText = data.name + ' left the chat room';
         break;
       default:
+        messageContainer.innerText = data.message;
         break;
     }
     messageContainer.classList.add('text-left');
@@ -110,6 +81,56 @@ function ChatRoom({ socket }) {
       top: scrollHeight,
     });
   };
+
+  // useEffect(() => {
+  //   ws.on('joined_user', (data) => {
+  //     if (data !== null && data.id > 0) {
+  //       getMessage(data, 'join');
+  //     }
+  //   });
+  //   ws.on('message', (data) => {
+  //     getMessage(data, 'message');
+  //   });
+  //   ws.on('left', (data) => {
+  //     getMessage(data, 'left');
+  //   });
+  //   ws.on('user-list', (data) => {
+  //     if (data !== null) setUserList(data);
+  //   });
+
+  //   return () => {
+  //     ws.off('joined_user');
+  //     ws.off('message');
+  //     ws.off('left');
+  //     ws.off('user-list');
+  //   };
+  // }, [ws]);
+
+  // const getMessage = (data, type) => {
+  //   let messageBox = document.querySelector('.message');
+  //   var scrollHeight = messageBox.scrollHeight;
+  //   let messageContainer = document.createElement('div');
+  //   switch (type) {
+  //     case 'message':
+  //       messageContainer.innerText = data.name + ': ' + data.message;
+  //       break;
+  //     case 'join':
+  //       messageContainer.innerText = data.name + ' joined the room';
+  //       break;
+  //     case 'left':
+  //       messageContainer.innerText = data.name + ' left the room';
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   messageContainer.classList.add('text-left');
+  //   messageContainer.classList.add('m-2');
+  //   messageBox.appendChild(messageContainer);
+  //   scrollRef.current.scrollTo({
+  //     behavior: 'smooth',
+  //     top: scrollHeight,
+  //   });
+  // };
 
   const sendMessage = (e) => {
     if (document.querySelector('.messageInput').value === '') return;

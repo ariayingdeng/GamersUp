@@ -16,7 +16,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/reviews")
 @AllArgsConstructor
-@CrossOrigin(origins="http://localhost:5252")
+@CrossOrigin(origins = "http://localhost:5252")
 public class ReviewApi {
     private ReviewService reviewService;
 
@@ -77,7 +77,7 @@ public class ReviewApi {
     }
 
     // Create a new reply
-    @PostMapping("/review={reviewid}")
+    @PostMapping("/review={reviewid}/reply")
     public ResponseEntity<Reply> addReply(@PathVariable long reviewid, @RequestBody Reply reply) {
         reply.setReviewID(reviewid);
         Reply newReply = reviewService.saveReply(reply);
@@ -97,7 +97,7 @@ public class ReviewApi {
     }
 
     // Read replies with review id
-    @GetMapping("/review={reviewid}/replies")
+    @GetMapping("/review={reviewid}/allreplies")
     public List<Reply> getAllReplies(@PathVariable long reviewid) {
         return reviewService.getAllRepliesByReviewID(reviewid);
     }
@@ -135,6 +135,21 @@ public class ReviewApi {
     public ResponseEntity<Void> deleteReply(@PathVariable long replyid) {
         reviewService.deleteReply(replyid);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/review={reviewid}/gamer={gamerid}/addstar")
+    public Boolean addStar(@PathVariable long reviewid, @PathVariable long gamerid) {
+        return reviewService.addStar(reviewid, gamerid);
+    }
+
+    @PutMapping("/review={reviewid}/gamer={gamerid}/decrementstar")
+    public Boolean decrementStar(@PathVariable long reviewid, @PathVariable long gamerid) {
+        return reviewService.decrementStar(reviewid, gamerid);
+    }
+
+    @GetMapping("/review={reviewid}/gamer={gamerid}/isstarred")
+    public Boolean checkIsStarred(@PathVariable long reviewid, @PathVariable long gamerid) {
+        return reviewService.isStarred(reviewid, gamerid);
     }
 
 }
