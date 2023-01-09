@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import EditReviewForm from './EditReviewForm';
 import gamerAvatar from '../../../images/gamers-logo.png';
 import Replies from '../replies/Replies';
+import AvatarImage from '../../utils/AvatarImage';
 
 function ReviewItem({ item, socket }) {
   const { deleteReview, addStar, cancelStar, checkiIsStarred } =
@@ -101,7 +102,7 @@ function ReviewItem({ item, socket }) {
             to={`/profile/${userID}`}
             className='mr-2 mb-2 text-gray-400 flex justify-start'
           >
-            <img
+            {/* <img
               src={
                 commenter?.avatarUrl !== null
                   ? commenter?.avatarUrl
@@ -112,6 +113,11 @@ function ReviewItem({ item, socket }) {
               onError={(e) => {
                 e.target.src = gamerAvatar;
               }}
+            /> */}
+            <AvatarImage
+              imgUrl={commenter?.avatarUrl}
+              gamerAvatar={gamerAvatar}
+              style={'w-10 h-10 rounded-full'}
             />
             <p className='mt-2 ml-3'>{commenter?.name}</p>
           </Link>

@@ -7,6 +7,7 @@ import {
   ThumbUpIcon,
 } from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
+import AvatarImage from '../utils/AvatarImage';
 
 function FriendItemR({ userID, gamerID, socket }) {
   const { isLoggedIn, getGamerById, isFriend, addFriend, changeLikes } =
@@ -79,13 +80,10 @@ function FriendItemR({ userID, gamerID, socket }) {
                 className='w-14 h-14 rounded-full avatar'
               />
             )} */}
-            <img
-              src={gamer.avatarUrl !== null ? gamer.avatarUrl : gamerAvatar}
-              alt='avatar'
-              className='w-14 h-14 rounded-full avatar'
-              onError={(e) => {
-                e.target.src = gamerAvatar;
-              }}
+            <AvatarImage
+              imgUrl={gamer.avatarUrl}
+              gamerAvatar={gamerAvatar}
+              style={'w-14 h-14 rounded-full avatar'}
             />
           </Link>
         </div>

@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from 'react'
 import UserContext from '../../../context/user/UserContext'
-import FriendComponent from '../../account/FriendComponent'
+import FriendComponent from './FriendComponent'
 
 function FriendList() {
   const { isLoggedIn, getFriends } = useContext(UserContext)

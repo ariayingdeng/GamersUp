@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import ChatContext from '../../../context/chat/ChatContext';
 import UserContext from '../../../context/user/UserContext';
 import gamerAvatar from '../../../images/gamers-logo.png';
+import AvatarImage from '../../utils/AvatarImage'
 
 function Avatar({ socket }) {
   const { logout, user } = useContext(UserContext);
@@ -20,13 +21,15 @@ function Avatar({ socket }) {
         <div className='w-12 rounded-full mt-2'>
           {/* {user.avatarUrl !== null && <img src={user.avatarUrl} alt='avatar' />}
           {user.avatarUrl === null && <img src={gamerAvatar} alt='avatar' />} */}
-          <img
+          {/* <img
             src={user.avatarUrl !== null ? user.avatarUrl : gamerAvatar}
             alt='avatar'
             onError={(e) => {
               e.target.src = gamerAvatar;
             }}
-          />
+            referrerPolicy='no-referrer'
+          /> */}
+          <AvatarImage imgUrl={user.avatarUrl} gamerAvatar={gamerAvatar} />
         </div>
       </label>
       <ul

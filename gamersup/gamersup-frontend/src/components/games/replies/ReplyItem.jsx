@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import UserContext from '../../../context/user/UserContext';
 import { Link } from 'react-router-dom';
 import gamerAvatar from '../../../images/gamers-logo.png';
+import AvatarImage from '../../utils/AvatarImage';
 
 function ReplyItem({ reply }) {
   const { comment, userID } = reply;
@@ -19,7 +20,7 @@ function ReplyItem({ reply }) {
   return (
     <div className='flex mt-6 mx-5'>
       <Link to={`/profile/${userID}`} className='mr-4 text-gray-400'>
-        <img
+        {/* <img
           src={
             commenter?.avatarUrl !== null ? commenter?.avatarUrl : gamerAvatar
           }
@@ -28,6 +29,11 @@ function ReplyItem({ reply }) {
           onError={(e) => {
             e.target.src = gamerAvatar;
           }}
+        /> */}
+        <AvatarImage
+          imgUrl={commenter?.avatarUrl}
+          gamerAvatar={gamerAvatar}
+          style={'w-10 h-10 rounded-xl'}
         />
       </Link>
       <div className='flex-col'>

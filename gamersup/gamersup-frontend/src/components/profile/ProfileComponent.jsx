@@ -7,6 +7,7 @@ import UserLevel from '../../components/profile/ProfileCard/UserLevel';
 import UserLikes from '../../components/profile/ProfileCard/UserLikes';
 import UserBio from '../../components/profile/ProfileCard/UserBio';
 import gamerAvatar from '../../images/gamers-logo.png';
+import AvatarImage from '../utils/AvatarImage';
 
 function ProfileComponent({ gamer, socket }) {
   const { id, name, email, dob, level, likes, bio, avatarUrl } = gamer;
@@ -75,13 +76,7 @@ function ProfileComponent({ gamer, socket }) {
             <div className='mb-2 w-64 h-64 mask mask-squircle '>
               {/* {avatarUrl === null && <img src={gamerAvatar} alt='avatar' />}
               {avatarUrl !== null && <img src={imgUrl} alt='Avatar' />} */}
-              <img
-                src={imgUrl !== null ? imgUrl : gamerAvatar}
-                alt='avatar'
-                onError={(e) => {
-                  e.target.src = gamerAvatar;
-                }}
-              />
+              <AvatarImage imgUrl={imgUrl} gamerAvatar={gamerAvatar} />
             </div>
           </div>
           {id === user.id && (

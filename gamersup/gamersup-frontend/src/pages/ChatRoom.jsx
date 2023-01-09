@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import socketIOClient from 'socket.io-client';
-import FriendComponent from '../components/account/FriendComponent';
+import FriendComponent from '../components/layout/nav/FriendComponent';
 import ChatContext from '../context/chat/ChatContext';
 
 const ws = socketIOClient('http://localhost:3000');

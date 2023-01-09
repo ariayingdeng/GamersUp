@@ -1,6 +1,7 @@
 import React from 'react';
-import gamerAvatar from '../../images/gamers-logo.png';
+import gamerAvatar from '../../../images/gamers-logo.png';
 import { Link } from 'react-router-dom';
+import AvatarImage from '../../utils/AvatarImage';
 
 function FriendComponent({ friend }) {
   return (
@@ -20,13 +21,10 @@ function FriendComponent({ friend }) {
             className='w-14 rounded-full avatar'
           />
         )} */}
-        <img
-          src={friend.avatarUrl !== null ? friend.avatarUrl : gamerAvatar}
-          alt='avatar'
-          className='w-14 h-14 rounded-full avatar'
-          onError={(e) => {
-            e.target.src = gamerAvatar;
-          }}
+        <AvatarImage
+          imgUrl={friend.avatarUrl}
+          gamerAvatar={gamerAvatar}
+          style={'w-14 h-14 rounded-full avatar'}
         />
         <div className='my-auto text-base'>{friend.name}</div>
       </Link>

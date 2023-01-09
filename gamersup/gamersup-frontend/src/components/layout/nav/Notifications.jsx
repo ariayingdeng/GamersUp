@@ -2,6 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import UserContext from '../../../context/user/UserContext';
 import { Link } from 'react-router-dom';
 import gamerAvatar from '../../../images/gamers-logo.png';
+import AvatarImage from '../../utils/AvatarImage';
 
 function Notifications({ socket }) {
   const { user, getGamerById, acceptFriendWithUI } = useContext(UserContext);
@@ -91,13 +92,10 @@ function Notifications({ socket }) {
                 className='w-8 rounded-full avatar'
               />
             )} */}
-            <img
-              src={content.avatarUrl !== null ? content.avatarUrl : gamerAvatar}
-              alt='avatar'
-              className='w-8 h-8 rounded-full avatar'
-              onError={(e) => {
-                e.target.src = gamerAvatar;
-              }}
+            <AvatarImage
+              imgUrl={content.avatarUrl}
+              gamerAvatar={gamerAvatar}
+              style={'w-8 h-8 rounded-full avatar'}
             />
           </Link>
           <div className='my-auto text-base col-span-5 flex justify-between'>
